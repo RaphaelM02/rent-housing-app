@@ -1,0 +1,192 @@
+[
+    {
+        "location": "Bali",
+        "name": "Little Copse House",
+        "photo_url": "../assets/image.png",
+        "price": "$ 1000 Per Month",
+        "type": "Cottage",
+        "km": 5,
+        "bathroom": 2,
+        "bedroom": 3,
+        "images": [
+            "../assets/ic-phone.png",
+            "../assets/ic-phone.png"
+        ],
+        "distances": {
+            "Jakarta": 9,
+            "Bali": 2,
+            "Surabaya": 15
+        },
+        "description": "A cozy cottage located in Bali with 3 bedrooms and 2 bathrooms.",
+        "person": {
+            "name": "Raphael Mady",
+            "image_url": "../assets/face1.png",
+            "phonenumber": "71519185",
+            "email": "raphaeltmady@gmail.com",
+            "position": "owner"
+        },
+        "coordinates": {
+            "latitude": -8.3405,
+            "longitude": 115.0920
+        }
+    },
+    {
+        "location": "Surabaya",
+        "name": "Luxury Villa",
+        "photo_url": "../assets/image6.png",
+        "price": "$ 1000 Per Month",
+        "type": "Villa",
+        "km": 8,
+        "bathroom": 3,
+        "bedroom": 4,
+        "images": [
+            "../assets/ic-phone.png",
+            "../assets/ic-phone.png"
+        ],
+        "distances": {
+            "Jakarta": 25,
+            "Bali": 6,
+            "Surabaya": 1
+        },
+        "description": "A luxurious villa in Surabaya with 4 bedrooms and 3 bathrooms.",
+        "person": {
+            "name": "Raphael Mady",
+            "image_url": "../assets/face2.png",
+            "phonenumber": "71519185",
+            "email": "raphaeltmady@gmail.com",
+            "position": "owner"
+        },
+        "coordinates": {
+            "latitude": -7.2575,
+            "longitude": 112.7521
+        }
+    },
+    {
+        "location": "Jakarta",
+        "name": "City Apartment",
+        "photo_url": "../assets/ic-message.png",
+        "price": "$ 1000 Per Month",
+        "type": "Apartment",
+        "km": 12,
+        "bathroom": 1,
+        "bedroom": 2,
+        "images": [
+            "../assets/ic-phone.png",
+            "../assets/ic-phone.png",
+            "../assets/ic-phone.png",
+            "../assets/ic-phone.png",
+            "../assets/ic-phone.png"
+        ],
+        "distances": {
+            "Jakarta": 3,
+            "Bali": 12,
+            "Surabaya": 11
+        },
+        "description": "A modern apartment in Jakarta with 2 bedrooms and 1 bathroom.",
+        "person": {
+            "name": "Raphael Mady",
+            "image_url": "../assets/face3.png",
+            "phonenumber": "71519185",
+            "email": "raphaeltmady@gmail.com",
+            "position":"owner"
+        },
+        "coordinates": {
+            "latitude": -6.2088,
+            "longitude": 106.8456
+        }
+        
+    },
+    {
+        "location": "Jakarta",
+        "name": "Beach Hotel",
+        "photo_url": "../assets/OIP.png",
+        "price": "$ 1000 Per Month",
+        "type": "Hotel",
+        "km": 15,
+        "bathroom": 2,
+        "bedroom": 3,
+        "images": [
+            "../assets/ic-phone.png",
+            "../assets/ic-phone.png"
+        ],
+        "distances": {
+            "Jakarta": 3,
+            "Bali": 17,
+            "Surabaya": 14
+        },
+        "description": "A beachside hotel in Jakarta with 3 bedrooms and 2 bathrooms.",
+        "person": {
+            "name": "Raphael Mady",
+            "image_url": "../assets/face4.png",
+            "phonenumber": "71519185",
+            "email": "raphaeltmady@gmail.com",
+            "position": "owner"
+        },
+        "coordinates": {
+            "latitude": -6.2088,
+            "longitude": 106.8456
+        }
+    },
+    {
+        "location": "Bali",
+        "name": "Lit",
+        "photo_url": "../assets/image00.png",
+        "price": "$ 1000 Per Month",
+        "type": "Cottage",
+        "km": 7,
+        "bathroom": 2,
+        "bedroom": 3,
+        "images": [
+            "../assets/ic-phone.png",
+            "../assets/ic-phone.png"
+        ],
+        "distances": {
+            "Jakarta": 11,
+            "Bali": 1,
+            "Surabaya": 17
+        },
+        "description": "A charming cottage in Bali with 3 bedrooms and 2 bathrooms.",
+        "person": {
+            "name": "Raphael Mady",
+            "image_url": "../assets/face5.png",
+            "phonenumber": "71519185",
+            "email": "raphaeltmady@gmail.com",
+            "position": "owner"
+        },
+        "coordinates": {
+            "latitude": -8.3405,
+            "longitude": 115.0920
+        }
+    },
+    {
+        "location": "Surabay",
+        "name": "Littt",
+        "photo_url": "../assets/ic-phone.png",
+        "price": "$ 1000 Per Month",
+        "type": "Hotel",
+        "km": 9,
+        "bathroom": 2,
+        "bedroom": 3,
+        "images": [
+            "../assets/ic-phone.png",
+            "../assets/ic-phone.png"
+        ],
+        "distances": {
+            "Jakarta": 25,
+            "Bali": 1,
+            "Surabaya": 9
+        },
+        "description": "A hotel in Surabay with 3 bedrooms and 2 bathrooms.",
+        "person": {
+            "name": "Raphael Mady",
+            "image_url": "../assets/face6.png",
+            "phonenumber": "71519185",
+            "email": "raphaeltmady@gmail.com",
+            "position":"owner"
+        },
+        "coordinates": {
+            "latitude": -7.2575,
+            "longitude": 112.7521
+        }
+    }
+]

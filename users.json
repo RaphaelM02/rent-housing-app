@@ -1,0 +1,23 @@
+[
+    {
+        "name" : "Raphael Mady",
+        "email" : "raphaeltmady@gmail.com",
+        "password" : "admin",
+        "phoneNo" : 71519185,
+        "position" : "owner"
+    },
+    {
+        "name" : "Charbel Hourani",
+        "email" : "charbel.hourani@gmail.com",
+        "password" : "admin",
+        "phoneNo" : 78959357,
+        "position" : "owner"
+    },
+    {
+        "name" : "User 1",
+        "email" : "user1@gmail.com",
+        "password" : "user1pass",
+        "phoneNo" : 71000000,
+        "position" : "User"
+    }
+]
