@@ -30,6 +30,7 @@
             "longitude": 115.0920
         }
     },
+    
     {
         "location": "Surabaya",
         "name": "Luxury Villa",
@@ -61,6 +62,7 @@
             "longitude": 112.7521
         }
     },
+
     {
         "location": "Jakarta",
         "name": "City Apartment",
@@ -96,6 +98,7 @@
         }
         
     },
+
     {
         "location": "Jakarta",
         "name": "Beach Hotel",
@@ -127,6 +130,7 @@
             "longitude": 106.8456
         }
     },
+
     {
         "location": "Bali",
         "name": "Lit",
@@ -158,6 +162,7 @@
             "longitude": 115.0920
         }
     },
+
     {
         "location": "Surabay",
         "name": "Littt",

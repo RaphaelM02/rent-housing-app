@@ -63,7 +63,7 @@ const SignUp = () => {
             return {valid: false, message: "Password must be at least 6 characters long.", field: 'password' };
         };
 
-        const phoneNoRegex = /^(03|70|71|78|80|81)[0-9]{6}$/;
+        const phoneNoRegex = /^(03|70|71|76|78|80|81)[0-9]{6}$/;
         if (phoneNo && !phoneNoRegex.test(phoneNo)){
             return {valid: false, message: "Mobile not valid", field: 'phoneNo' };
         };

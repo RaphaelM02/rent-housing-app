@@ -8,10 +8,12 @@ import imageMapping from "./imageMappings";
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from "expo-font";
 import * as FileSystem from 'expo-file-system';
+import { useUser } from "./UserContext";
 
 const LogIn = () => {
     const navigation = useNavigation();
 
+    const {login} = useUser();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
 
@@ -38,8 +40,12 @@ const LogIn = () => {
             if (!user) {
                 Alert.alert('Invalid email or password');
             } else if (user) {
-                const position = user.position;
-                navigation.navigate(position === "Owner" ? "Home" : "WhitePage");
+                navigation.navigate("Home");
+                login({
+                    name: user.name,
+                    email: user.email,
+                    position: user.position,
+                })
             }
         } catch (error) {
             console.log(error);

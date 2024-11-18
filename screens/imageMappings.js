@@ -14,6 +14,10 @@ const imageMapping = {
     "../assets/face5.png": require("../assets/face5.png"),
     "../assets/face6.png": require("../assets/face6.png"),
     "../assets/main-logo.png": require("../assets/main-logo.png"),
+    "notificationsIcon": require("../assets/logo1.png"),
+    "homeLogo": require("../assets/logo11.png"),
+    "bedIcon" : require("../assets/logo5.png"), 
+    "bathIcon" : require("../assets/logo6.png"),
 }
 
 export default imageMapping;
