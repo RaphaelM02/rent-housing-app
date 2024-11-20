@@ -18,6 +18,27 @@ const imageMapping = {
     "homeLogo": require("../assets/logo11.png"),
     "bedIcon" : require("../assets/logo5.png"), 
     "bathIcon" : require("../assets/logo6.png"),
+    "backIcon" : require("../assets/logo7.png"),
+    "bookmarkIcon" : require("../assets/logo8.png"),
+    "phoneIcon" : require("../assets/logo9.png"),
+    "messageIcon" : require("../assets/logo10.png"),
+    //Antelias Property 
+    "../assets/images/outdoor.jpg" : require("../assets/images/outdoor.jpg"),
+    "../assets/images/outdoor-1.jpg" : require("../assets/images/outdoor-1.jpg"),
+    "../assets/images/outdoor-2.jpg" : require("../assets/images/outdoor-2.jpg"),
+    "../assets/images/outdoor-3.jpg" : require("../assets/images/outdoor-3.jpg"),
+    "../assets/images/indoor.jpg" : require("../assets/images/indoor.jpg"),
+    "../assets/images/indoor-1.jpg" : require("../assets/images/indoor-1.jpg"),
+    "../assets/images/indoor-2.jpg" : require("../assets/images/indoor-2.jpg"),
+    "../assets/images/indoor-3.jpg" : require("../assets/images/indoor-3.jpg"),
+    "../assets/images/indoor-4.jpg" : require("../assets/images/indoor-4.jpg"),
+    "../assets/images/indoor-5.jpg" :  require("../assets/images/indoor-5.jpg"),
+    "../assets/images/bathroom.jpg" : require("../assets/images/bathroom.jpg"),
+    "../assets/images/bathroom-1.jpg" : require("../assets/images/bathroom-1.jpg"),
+    "../assets/images/bathroom-2.jpg" : require("../assets/images/bathroom-2.jpg"),
+    "../assets/images/hall.jpg" : require("../assets/images/hall.jpg"),
+    "../assets/images/hall-1.jpg" : require("../assets/images/hall-1.jpg"),
+    "../assets/images/building.jpg" : require("../assets/images/building.jpg"),
 }
 
 export default imageMapping;

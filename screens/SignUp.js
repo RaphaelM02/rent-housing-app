@@ -31,22 +31,6 @@ const SignUp = () => {
     const handleEmailInputSubmit = () => {passwordInputRef.current.focus();};
     const handlePassowrdInputSubmit = () => {phoneNoInputRef.current.focus();};
 
-    const checkEmptyInputs = () => {
-        const errors = {};
-        if (!name) {
-            errors.name = "Name is required.";
-        }
-        if (!email) {
-            errors.email = "Email is required.";
-        }
-        if (!password) {
-            errors.password = "Password is required.";
-        }
-        if (!phoneNo) {
-            errors.phoneNo = "Phone number is required.";
-        }
-        return errors;
-    }
 
     const validateInputs = (name, email, password, phoneNo, position) => {
         const nameRegex = /^[A-Za-z]+ [A-Za-z]+$/;

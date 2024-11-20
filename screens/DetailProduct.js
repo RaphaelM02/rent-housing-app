@@ -10,26 +10,16 @@ import MapView, { Marker } from 'react-native-maps';
 const DetailProduct = () => {
     const navigation = useNavigation();
 
-    const handlePressHome = () => {
-        navigation.navigate('Home');
-    };
-
-    const handlePress = () => {
-        Alert.alert('You have successfully rented this property');
-    };
+    const handlePressHome = () => { navigation.navigate('Home'); };
+    const handlePress = () => { Alert.alert('You have successfully rented this property'); };
+    const handlePhonePress = () => { Linking.openURL(`tel:${phonenumber}`); };
+    const handleEmailPress = () => { Linking.openURL(`mailto:${email}`); };
 
     const route = useRoute();
     const { photo_url, bedroom, bathroom, description, photoo, images, name, location, item_name, price, phonenumber,email } = route.params;
     const [modalVisible, setModalVisible] = React.useState(false);
     const [isDescriptionExpanded, setIsDescriptionExpanded] = React.useState(false);
 
-    const handlePhonePress = () => {
-        Linking.openURL(`tel:${phonenumber}`);
-    };
-
-    const handleEmailPress = () => {
-        Linking.openURL(`mailto:${email}`);
-    };
 
     const renderGalleryItem = ({ item, index }) => {
         if (index < 3) {
@@ -64,16 +54,83 @@ const DetailProduct = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
+
+            {/*Main property image*/}
             <View style={styles.detailProduct}>
                 <Image
                     style={styles.mainImage}
                     resizeMode="cover"
                     source={imageMapping[photo_url]}
                 />
+
+                {/*Home and bookmark buttons*/}
+                <TouchableOpacity onPress={handlePressHome}>
+                    <Image
+                        style={[styles.icBackIcon, styles.iconLayout]}
+                        resizeMode="cover"
+                        source={require("../assets/logo7.png")}
+                    />
+                </TouchableOpacity>
+                <Image
+                    style={[styles.icBookmarkIcon, styles.iconLayout]}
+                    resizeMode="cover"
+                    source={require("../assets/logo8.png")}
+                />
+
+                {/*Property name and price*/}
                 <View style={styles.overlayContainer}>
                     <Text style={styles.itemName}>{item_name}</Text>
                     <Text style={styles.itemPrice}>{price}</Text>
                 </View>
+
+                {/*Property bedrooms*/}
+                <View style={[styles.bedroom, styles.iconLayout2]}>
+                    <Text style={styles.bedroom1Typo}>{bedroom} Bedroom</Text>
+                    <Image
+                        style={[styles.icPhoneIcon1, styles.iconLayout3]}
+                        resizeMode="cover"
+                        source={require("../assets/logo5.png")}
+                    />
+                </View>
+
+                {/*Property bathrooms*/}
+                <View style={[styles.bathroom, styles.bathroomLayout]}>
+                    <Text style={[styles.bathroom1, styles.bedroom1Typo]}>{bathroom} Bathroom</Text>
+                    <Image
+                        style={[styles.icBathroomIcon, styles.bathroomLayout]}
+                        resizeMode="cover"
+                        source={require("../assets/logo6.png")}
+                    />
+                </View>
+
+                {/*Property description*/}
+                <View style={[styles.description, styles.galleryPosition]}>
+                    <Text style={styles.descriptionLabel}>Description</Text>
+                    <Text style={styles.descriptionText}>
+                        {isDescriptionExpanded ? description : `${description.slice(0, 100)}...`}
+                    </Text>
+                    <TouchableOpacity onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}>
+                        <Text style={styles.seeMoreText}>
+                            {isDescriptionExpanded ? "Show Less" : "Show More"}
+                        </Text>
+                    </TouchableOpacity>
+
+                    {/*Owner section*/}
+                    <View style={styles.imageNameContainer}>
+                        <Image
+                            style={styles.smallImage}
+                            resizeMode="cover"
+                            source={imageMapping[photoo]}
+                        />
+                        <View style={[styles.A]}>
+                            <Text style={styles.propertyName}>{name}</Text>
+                            <Text style={styles.owner}>Owner </Text>
+                        </View>
+                    </View>
+
+                </View>
+
+                {/*Contact buttons*/}
                 <View style={[styles.contact, styles.iconLayout2]}>
                     <TouchableOpacity onPress={handlePhonePress}>
                     <Image
@@ -90,6 +147,8 @@ const DetailProduct = () => {
                     />
                     </TouchableOpacity>
                 </View>
+                
+                {/*Property gallery*/}
                 <View style={[styles.gallery, styles.galleryPosition]}>
                     <Text style={[styles.gallery1, styles.rentNowTypo]}>Gallery</Text>
                     <FlatList
@@ -99,75 +158,8 @@ const DetailProduct = () => {
                         renderItem={renderGalleryItem}
                     />
                 </View>
-                <LinearGradient
-                    style={[styles.shadow, styles.shadowBg]}
-                    locations={[0.14, 1]}
-                    colors={["#a0dafb", "#0a8ed9"]}
-                    useAngle={true}
-                    angle={180}
-                />
-                <TouchableOpacity onPress={handlePress}>
-                    <LinearGradient
-                        style={[styles.btnRent, styles.shadowBg]}
-                        locations={[0.14, 1]}
-                        colors={["#a0dafb", "#0a8ed9"]}
-                        useAngle={true}
-                        angle={180}
-                    >
-                        <Text style={[styles.rentNow, styles.rentNowTypo]}>Rent Now</Text>
-                    </LinearGradient>
-                </TouchableOpacity>
-                <View style={[styles.description, styles.galleryPosition]}>
-                    <Text style={styles.descriptionLabel}>Description</Text>
-                    <Text style={styles.descriptionText}>
-                        {isDescriptionExpanded ? description : `${description.slice(0, 100)}...`}
-                    </Text>
-                    <TouchableOpacity onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}>
-                        <Text style={styles.seeMoreText}>
-                            {isDescriptionExpanded ? "Show Less" : "Show More"}
-                        </Text>
-                    </TouchableOpacity>
-                    <View style={styles.imageNameContainer}>
-                        <Image
-                            style={styles.smallImage}
-                            resizeMode="cover"
-                            source={imageMapping[photoo]}
-                        />
-                        <View style={[styles.A]}>
-                            <Text style={styles.propertyName}>{name}</Text>
-                            <Text style={styles.owner}>Owner </Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={[styles.bedroom, styles.iconLayout2]}>
-                    <Text style={styles.bedroom1Typo}>{bedroom} Bedroom</Text>
-                    <Image
-                        style={[styles.icPhoneIcon1, styles.iconLayout3]}
-                        resizeMode="cover"
-                        source={require("../assets/logo5.png")}
-                    />
-                </View>
-                <View style={[styles.bathroom, styles.bathroomLayout]}>
-                    <Text style={[styles.bathroom1, styles.bedroom1Typo]}>{bathroom} Bathroom</Text>
-                    <Image
-                        style={[styles.icBathroomIcon, styles.bathroomLayout]}
-                        resizeMode="cover"
-                        source={require("../assets/logo6.png")}
-                    />
-                </View>
-                <TouchableOpacity onPress={handlePressHome}>
-                    <Image
-                        style={[styles.icBackIcon, styles.iconLayout]}
-                        resizeMode="cover"
-                        source={require("../assets/logo7.png")}
-                    />
-                </TouchableOpacity>
-                <Image
-                    style={[styles.icBookmarkIcon, styles.iconLayout]}
-                    resizeMode="cover"
-                    source={require("../assets/logo8.png")}
-                />
-                    
+
+                {/*Map*/}
                 <MapView
                     style={styles.map}
                     initialRegion={{
@@ -184,13 +176,29 @@ const DetailProduct = () => {
                         }}
                         title={name}
                     />
-                        
                 </MapView>
-                    <Text style={[styles.priceText, styles.rentNowTypo]}>
-                        Price
-                    </Text>
-                    <Text style={styles.propertyprice}>{price}</Text>
+
+                {/*Property price at the bottom*/}
+                <Text style={[styles.priceText, styles.rentNowTypo]}>
+                    Price
+                </Text>
+                <Text style={styles.propertyprice}>{price}</Text>
+
+                {/*Rent Now button*/}
+                <TouchableOpacity onPress={handlePress}>
+                    <LinearGradient
+                        style={[styles.btnRent, styles.shadowBg]}
+                        locations={[0.14, 1]}
+                        colors={["#a0dafb", "#0a8ed9"]}
+                        useAngle={true}
+                        angle={180}
+                    >
+                        <Text style={[styles.rentNow, styles.rentNowTypo]}>Rent Now</Text>
+                    </LinearGradient>
+                </TouchableOpacity>
             </View>
+            
+            {/*Modal for properties having more than 4 pictures*/}
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -201,7 +209,7 @@ const DetailProduct = () => {
                     <FlatList
                         horizontal={true}
                         data={images}
-                        keyExtractor={(_item, index) => index.toString()}
+                        keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
                             <Image
                                 style={styles.modalImage}

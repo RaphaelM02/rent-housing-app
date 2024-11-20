@@ -6,9 +6,11 @@ import React, { useEffect } from 'react';
 import LogIn from './screens/LogIn';
 import SignUp from './screens/SignUp';
 import HomeScreen from './screens/HomeScreen';
+import HomeScreenNew from './screens/HomeScreenNew';
 import Menu from './screens/Menu';
 import WhitePage from './screens/WhitePage';
 import DetailProduct from './screens/DetailProduct';
+import DetailProductNew from './screens/DetailProductNew';
 import { User } from './screens/UserContext';
 import * as Font from 'expo-font';
 
@@ -35,21 +37,21 @@ const AppNavigator = () => {
         return(
             <Text>Loading ...</Text>
         )
-    }
+    };
+
     return(
         <User>
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="LogIn" component={LogIn} />
                     <Stack.Screen name="SignUp" component={SignUp} />
-                    <Stack.Screen name="Home" component={HomeScreen} />
+                    <Stack.Screen name="Home" component={HomeScreenNew} />
                     <Stack.Screen name="Menu" component={Menu} />
                     <Stack.Screen name="WhitePage" component={WhitePage} options={{ headerShown: true }} /> 
-                    <Stack.Screen name="DetailProduct" component={DetailProduct} />
+                    <Stack.Screen name="DetailProduct" component={DetailProductNew} />
                 </Stack.Navigator>
             </NavigationContainer>
         </User>
-        
     );
 };
 
