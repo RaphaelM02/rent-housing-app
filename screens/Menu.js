@@ -19,7 +19,7 @@ const Menu = ({ navigation }) => {
 
                 {/*Home Section*/}
                 <TouchableOpacity
-                    style={[styles.menuSections, styles.homeSection]}
+                    style={styles.menuSections}
                     onPress={handlePressHome}
                 >
                     <Image
@@ -32,7 +32,7 @@ const Menu = ({ navigation }) => {
 
                 {/*Bookmark Section*/}
                 <TouchableOpacity
-                    style={[styles.menuSections, styles.bookmarkSection]}
+                    style={styles.menuSections}
                     onPress={handlePress}
                 >
                     <Image
@@ -45,7 +45,7 @@ const Menu = ({ navigation }) => {
 
                 {/*Notifications Section*/}
                 <TouchableOpacity
-                    style={[styles.menuSections, styles.notificationSection]}
+                    style={styles.menuSections}
                     onPress={handlePress}
                 >
                     <Image
@@ -58,7 +58,7 @@ const Menu = ({ navigation }) => {
 
                 {/*Nearby Section*/}
                 <TouchableOpacity
-                    style={[styles.menuSections, styles.nearbySection]}
+                    style={styles.menuSections}
                     onPress={handlePress}
                 >
                     <Image
@@ -71,7 +71,7 @@ const Menu = ({ navigation }) => {
 
                 {/*Messages Section*/}
                 <TouchableOpacity
-                    style={[styles.menuSections, styles.messagesSection]}
+                    style={styles.menuSections}
                     onPress={handlePress}
                 >
                     <Image
@@ -84,7 +84,7 @@ const Menu = ({ navigation }) => {
 
                 {/*Settings Section*/}
                 <TouchableOpacity
-                    style={[styles.menuSections, styles.settingsSection]}
+                    style={styles.menuSections}
                     onPress={handlePress}
                 >
                     <Image
@@ -92,12 +92,12 @@ const Menu = ({ navigation }) => {
                         resizeMode="cover"
                         source={require("../assets/logo13.png")}
                     />
-                    <Text style={styles.menuText}>Setting</Text>
+                    <Text style={styles.menuText}>Settings</Text>
                 </TouchableOpacity>
 
                 {/*Profile Section*/}
                 <TouchableOpacity
-                    style={[styles.menuSections, styles.profileSection]}
+                    style={styles.menuSections}
                     onPress={handlePress}
                 >
                     <Image
@@ -110,7 +110,7 @@ const Menu = ({ navigation }) => {
 
                 {/*Help Section*/}
                 <TouchableOpacity
-                    style={[styles.menuSections, styles.helpSection]}
+                    style={styles.menuSections}
                     onPress={handleHelpPress}
                 >
                     <Image
@@ -123,7 +123,7 @@ const Menu = ({ navigation }) => {
 
                 {/*Logout Section*/}
                 <TouchableOpacity
-                    style={[styles.menuSections, styles.logoutSection]}
+                    style={styles.menuSections}
                     onPress={handleLogoutPress}
                 >
                     <Image
@@ -140,72 +140,38 @@ const Menu = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     menu: {
-        width: width,
-        height: height,
-        position: "absolute",
-        padding: "2%",
-        //alignItems: "center",
+        flex: 1,
+        justifyContent: "space-evenly",
+        paddingHorizontal: "5%",
+        backgroundColor: "#f9f9f9",
+        marginVertical: 30,
     },
-
+      
     menuSections: {
-        width: "auto",
-        height: "7%",
         flexDirection: "row",
-        backgroundColor: "#d9d9d9",
-        borderRadius: Border.br_3xs,
-        borderWidth: 2,
-        borderColor: "#d9d9d9",
+        alignItems: "center",
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        width: "100%",
     },
-
+      
     menuIcons: {
-        width: "50",
-        height: "100%",
-        position: "relative",
+        width: 40,
+        height: 40,
+        marginRight: 10,
     },
-
+      
     menuText: {
-        fontFamily: "Raleway-Medium",
-        fontSize: FontSize.size_base,
-        color: Color.colorBlack,
-        position: "relative",
-        top: "25%",
-        left: "1%",
-    },
-
-    homeSection: {
-        top: height / 9,
-    },
-
-    bookmarkSection: {
-        top: (height / 9) + 10,
-    },
-
-    notificationSection: {
-        top: (height / 9) + 20,
-    },
-
-    nearbySection: {
-        top: (height / 9) + 30,
-    },
-
-    messagesSection: {
-        top: (height / 9) + 40,
-    },
-
-    settingsSection: {
-        top: (height / 9) + 50,
-    },
-
-    profileSection: {
-        top: (height / 9) + 60,
-    },
-
-    helpSection: {
-        top: (height / 9) + 70,
-    },
-
-    logoutSection: {
-        top: (height / 9) + 80,
+        fontSize: 16,
+        fontWeight: "600",
+        color: "#333",
     },
 });
 
