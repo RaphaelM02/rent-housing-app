@@ -9,14 +9,10 @@ const {width, height} = Dimensions.get("window");
 const Menu = ({ navigation }) => {
     const {user, logout} = useUser();
 
-    const handlePress = () => {
-        navigation.navigate('WhitePage');
-    };
-
-    const handlePressHome = () => {
-        navigation.navigate('Home');
-    };
-
+    const handlePress = () => { navigation.navigate('WhitePage'); };
+    const handlePressHome = () => { navigation.navigate('Home'); };
+    const handleLogoutPress = () => { navigation.navigate('LogIn'); };
+    const handleHelpPress = () => { navigation.navigate('AddListing'); };
 
     return (
             <View style={styles.menu}>
@@ -115,7 +111,7 @@ const Menu = ({ navigation }) => {
                 {/*Help Section*/}
                 <TouchableOpacity
                     style={[styles.menuSections, styles.helpSection]}
-                    onPress={handlePress}
+                    onPress={handleHelpPress}
                 >
                     <Image
                         style={styles.menuIcons}
@@ -128,7 +124,7 @@ const Menu = ({ navigation }) => {
                 {/*Logout Section*/}
                 <TouchableOpacity
                     style={[styles.menuSections, styles.logoutSection]}
-                    onPress={handlePress}
+                    onPress={handleLogoutPress}
                 >
                     <Image
                         style={styles.menuIcons}

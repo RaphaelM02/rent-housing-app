@@ -5,14 +5,15 @@ import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import LogIn from './screens/LogIn';
 import SignUp from './screens/SignUp';
-import HomeScreen from './screens/HomeScreen';
-import HomeScreenNew from './screens/HomeScreenNew';
+import Home from './screens/Home';
+import SearchListing from './screens/SearchListing';
 import Menu from './screens/Menu';
 import WhitePage from './screens/WhitePage';
-import DetailProduct from './screens/DetailProduct';
 import DetailProductNew from './screens/DetailProductNew';
 import { User } from './screens/UserContext';
+import AddListing from './screens/AddListing';
 import * as Font from 'expo-font';
+import 'react-native-get-random-values';
 
 const Stack = createStackNavigator();
 
@@ -45,10 +46,12 @@ const AppNavigator = () => {
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="LogIn" component={LogIn} />
                     <Stack.Screen name="SignUp" component={SignUp} />
-                    <Stack.Screen name="Home" component={HomeScreenNew} />
+                    <Stack.Screen name="Home" component={Home} />
+                    <Stack.Screen name="SearchListing" component={SearchListing} />
                     <Stack.Screen name="Menu" component={Menu} />
                     <Stack.Screen name="WhitePage" component={WhitePage} options={{ headerShown: true }} /> 
                     <Stack.Screen name="DetailProduct" component={DetailProductNew} />
+                    <Stack.Screen name="AddListing" component={AddListing} />
                 </Stack.Navigator>
             </NavigationContainer>
         </User>

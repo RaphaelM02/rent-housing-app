@@ -5,10 +5,10 @@ import propertiesData from "../info.json";
 import { Border, FontFamily, FontSize, Color } from "./GlobalStyles";
 import imageMapping from './imageMappings';
 
-const locations = ["Jakarta", "Bali", "Surabaya"];
+const locations = ["Jakarta", "Bali", "Surabaya", "Antelias"];
 const {width, height} = Dimensions.get("window");
 
-const HomeScreen = () => {
+const SearchListing = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [searchText, setSearchText] = useState("");
     const [currentLocationIndex, setCurrentLocationIndex] = useState(0);
@@ -40,62 +40,6 @@ const HomeScreen = () => {
         return filteredProperties.sort((a, b) => a.price - b.price)[0];
     };
 
-    const renderImages = () => {
-        let filteredProperties = getFilteredProperties();
-
-        if (!selectedCategory && !searchText) {
-            filteredProperties = propertiesData.sort((a, b) => a.price - b.price);
-        }
-
-        return (
-            <ScrollView horizontal style={styles.imageContainer}>
-                {filteredProperties.map(property => (
-                    <TouchableOpacity
-                        key={property.name}
-                        style={styles.propertyContainer}
-                        onPress={() => navigation.navigate('DetailProduct', {
-                            photo_url: property.photo_url,
-                            bedroom: property.bedroom,
-                            bathroom: property.bathroom,
-                            description: property.description,
-                            images: property.images,
-                            name: property.person.name,
-                            location: property.coordinates,
-                            item_name: property.name,
-                            price: property.price,
-                            phonenumber: property.person.phonenumber,
-                            email: property.person.email,
-                            position: property.person.position,
-                            photoo: property.person.image_url,
-                        })}
-                    >
-                        <View style={styles.imageWrapper}>
-                            <Image
-                                style={styles.propertyImage}
-                                resizeMode="cover"
-                                source={imageMapping[property.photo_url]}
-                            />
-                            <View style={styles.distanceContainer}>
-                                <View style={styles.circularContainer}>
-                                    <Image
-                                        style={styles.distanceIcon}
-                                        resizeMode="cover"
-                                        source={imageMapping["../assets/logo12.png"]}
-                                    />
-                                    <Text style={styles.propertyDistanceOnImage}>
-                                        {property.distances[locations[currentLocationIndex]]} km
-                                    </Text>
-                                </View>
-                            </View>
-                            <Text style={styles.propertyName}>{property.name}</Text>
-                            <Text style={styles.propertyPrice}>{property.price}</Text>
-                        </View>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
-        );
-    };
-
     const renderImagesByLocation = (location) => {
         let sortedProperties = getFilteredProperties();
 
@@ -104,27 +48,28 @@ const HomeScreen = () => {
         };
 
         return (
-            //<View style={styles.propertiesImagesContainer}>
-                <ScrollView horizontal style={styles.imageContainer} showsHorizontalScrollIndicator={false}>
+            <ScrollView horizontal style={styles.imageContainer} showsHorizontalScrollIndicator={false}>
                 {sortedProperties.map(property => (
                     <TouchableOpacity
                         key={property.name}
                         style={styles.propertyContainer}
-                        onPress={() => navigation.navigate('DetailProduct', {
-                            photo_url: property.photo_url,
-                            bedroom: property.bedroom,
-                            bathroom: property.bathroom,
-                            description: property.description,
-                            images: property.images,
-                            name: property.person.name,
-                            location: property.coordinates,
-                            item_name: property.name,
-                            price: property.price,
-                            phonenumber: property.person.phonenumber,
-                            email: property.person.email,
-                            position: property.person.position,
-                            photoo: property.person.image_url,
-                        })}
+                        onPress={() => {
+                            navigation.navigate('DetailProduct', {
+                                location: property.coordinates,
+                                propertyName: property.name,
+                                propertyImage: property.photo_url,
+                                price: property.price,
+                                bathrooms: property.bathroom,
+                                bedrooms: property.bedroom,
+                                images: property.images,
+                                description: property.description,
+                                ownerName: property.person.name,
+                                ownerImage: property.person.image_url,
+                                phonenumber: property.person.phonenumber,
+                                email: property.person.email,
+                            });
+                            
+                        }}
                     >
                         <View>
                             <Image
@@ -149,8 +94,7 @@ const HomeScreen = () => {
                         </View>
                     </TouchableOpacity>
                 ))}
-                </ScrollView>
-            //</View>
+            </ScrollView>
         );
     }
 
@@ -166,30 +110,12 @@ const HomeScreen = () => {
                 <View style={styles.location}>
                     <Text style={styles.locationText}>Location</Text>
                     <Text style={styles.locationName} onPress={changeLocation}>{locations[currentLocationIndex]} ▼</Text>
-                    {/*}
-                    <TouchableOpacity onPress={changeLocation}>
-                        <Image
-                            style={[styles.icArrowDownIcon, styles.iconLayout]}
-                            resizeMode="cover"
-                            source={require("../assets/logo2.png")}
-                        />
-                    </TouchableOpacity>
-                    {*/}
                     <Image
                         style={styles.icNotificationIcon}
                         resizeMode="cover"
                         source={imageMapping.notificationsIcon}
                     />
                 </View>
-
-                {/*Notifications Icon*/}
-                {/*}
-                <Image
-                    style={styles.icNotificationIcon}
-                    resizeMode="cover"
-                    source={imageMapping.notificationsIcon}
-                />
-                {*/}
 
                 {/*Search Bar*/}
                 <View style={styles.searchBar}>
@@ -300,7 +226,7 @@ const HomeScreen = () => {
                 </View>
 
                 {/*Get the filtered properties by the distance from the selected location*/}
-                <Text style={styles.nearFromYou}>Near from you</Text>
+                <Text style={styles.nearFromYou}>Near you</Text>
                 {renderImagesByLocation(locations[currentLocationIndex])}
 
                 {/*Best property*/}
@@ -339,21 +265,18 @@ const HomeScreen = () => {
 
 
                         <TouchableOpacity onPress={() => navigation.navigate('DetailProduct', {
-                            photo_url: bestProperty.photo_url,
-                            bedroom: bestProperty.bedroom,
-                            bathroom: bestProperty.bathroom,
-                            description: bestProperty.description,
-                            image_url: bestProperty.photo_url,
-                            images: bestProperty.images,
-                            name: bestProperty.person.name,
                             location: bestProperty.coordinates,
-                            item_name: bestProperty.name,
+                            propertyName: bestProperty.name,
+                            propertyImage: bestProperty.photo_url,
                             price: bestProperty.price,
+                            bathrooms: bestProperty.bathroom,
+                            bedrooms: bestProperty.bedroom,
+                            images: bestProperty.images,
+                            description: bestProperty.description,
+                            ownerName: bestProperty.person.name,
+                            ownerImage: bestProperty.person.image_url,
                             phonenumber: bestProperty.person.phonenumber,
                             email: bestProperty.person.email,
-                            position: bestProperty.person.position,
-                            photoo: bestProperty.person.image_url,
-
                         })}>
                             <Image
                                 style={styles.bestPropertyIcon}
@@ -667,4 +590,4 @@ const styles = StyleSheet.create({
     //End Best for you text & best property
 });
 
-export default HomeScreen;
+export default SearchListing;

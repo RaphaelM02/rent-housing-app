@@ -34,22 +34,38 @@ const SignUp = () => {
 
     const validateInputs = (name, email, password, phoneNo, position) => {
         const nameRegex = /^[A-Za-z]+ [A-Za-z]+$/;
-        if (name && !nameRegex.test(name)){
-            return {valid : false, message: "Name must consists of 2 words.", field: 'name' };
+        if ((name && !nameRegex.test(name))){
+            return {valid: false, message: "Name must consists of 2 words.", field: 'name' };
+        };
+
+        if (!name){
+            return {valid: false, message: "Name can't be empty.", field: 'name'};
         };
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (email && !emailRegex.test(email)) {
+        if ((email && !emailRegex.test(email))) {
             return {valid: false, message: "Invalid email format.", field: 'email' };
         };
 
-        if (password && password.length < 6) {
+        if (!email) {
+            return {valid: false, message: "Email can't be empty.", field: 'email'};
+        };
+
+        if ((password && password.length < 6)) {
             return {valid: false, message: "Password must be at least 6 characters long.", field: 'password' };
         };
 
+        if (!password){
+            return {valid: false, message: "Password can't be empty.", field: 'password'};
+        };
+
         const phoneNoRegex = /^(03|70|71|76|78|80|81)[0-9]{6}$/;
-        if (phoneNo && !phoneNoRegex.test(phoneNo)){
+        if ((phoneNo && !phoneNoRegex.test(phoneNo))){
             return {valid: false, message: "Mobile not valid", field: 'phoneNo' };
+        };
+
+        if (!phoneNo){
+            return {valid: false, message: "Mobile number can't be empty.", field: 'phoneNo'};
         };
 
         if (!position) {

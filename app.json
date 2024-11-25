@@ -26,6 +26,9 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "googleApiKey": "AIzaSyAHHKgDSH7VSWq75a7boGoMyXaAbOVgxkE"
+    }
   }
 }
