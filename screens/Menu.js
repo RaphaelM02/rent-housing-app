@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions } from "react-native";
+import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions, ScrollView } from "react-native";
 import { FontFamily, Color, FontSize, Border } from "./GlobalStyles";
 import imageMapping from "./imageMappings";
 import { useUser } from "./UserContext";
@@ -15,6 +15,7 @@ const Menu = ({ navigation }) => {
     const handleHelpPress = () => { navigation.navigate('AddListing'); };
 
     return (
+        <ScrollView contentContainerStyle={styles.scrollViewContainer} showsVerticalScrollIndicator={false}>
             <View style={styles.menu}>
 
                 {/*Home Section*/}
@@ -134,17 +135,21 @@ const Menu = ({ navigation }) => {
                     <Text style={styles.menuText}>Logout</Text>
                 </TouchableOpacity>
             </View>
-
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
+    scrollViewContainer: {
+        flexGrow: 1,
+        paddingVertical: 30,
+    },
+
     menu: {
         flex: 1,
         justifyContent: "space-evenly",
         paddingHorizontal: "5%",
         backgroundColor: "#f9f9f9",
-        marginVertical: 30,
     },
       
     menuSections: {
