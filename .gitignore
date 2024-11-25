@@ -35,4 +35,4 @@ yarn-error.*
 *.tsbuildinfo
 
 # APIs
-api-keys.json
+.env

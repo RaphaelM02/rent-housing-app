@@ -37,7 +37,6 @@ const AddListing = () => {
         },
     });
 
-
     const [isMapLoaded, setIsMapLoaded] = React.useState(false);
 
     const [inputHidden, setInputHidden] = useState(false);
