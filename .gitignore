@@ -36,3 +36,4 @@ yarn-error.*
 
 # APIs
 .env
+rent-housing.json

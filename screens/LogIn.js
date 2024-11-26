@@ -94,40 +94,69 @@ const LogIn = () => {
 }
 
 const styles = StyleSheet.create({
+    //Main scroll view
     scrollContainer: {
-        flexGrow : 1,
-        marginBottom: 20,
+        flexGrow: 1,
+        paddingHorizontal: 20,
         marginTop: 50,
+        paddingBottom: 20,
     },
+
+    //Logo
     mainImage: {
         alignSelf: 'center',
-        marginBottom: 15,
+        marginBottom: 30,
     },
-    input:{
-        height: 40,
-        margin: 12,
+
+    //Input fields
+    input: {
+        height: 50,
         borderWidth: 1,
-        paddingLeft : 5,
+        borderColor: '#D1D1D1',
+        borderRadius: 8,
+        paddingLeft: 15,
+        marginBottom: 20,
+        fontFamily: 'Raleway-Regular',
+        fontSize: 16,
     },
+
+    //Login and Sign Up buttons container
     buttonsContainer: {
-        width: '75%',
-        height: 40,
+        backgroundColor: '#4A90E2',
+        width: '100%',
+        height: 50,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
+        borderRadius: 8,
         marginBottom: 20,
     },
+
     logInText: {
         fontFamily: 'Raleway-SemiBold',
-        borderWidth: 1,
-        height: '100%',
-        width: '100%',
+        color: '#fff',
+        fontSize: 16,
+    },
+
+    signUpContainer: {
+        alignSelf: 'center',
+    },
+    
+    signUpText: {
+        fontFamily: 'Raleway-Regular',
+        color: '#4A90E2',
+        fontSize: 14,
         textAlign: 'center',
     },
-    footerText:{
+
+    //Footer
+    footerText: {
         position: 'absolute',
-        bottom: 0,
+        bottom: 10,
         alignSelf: 'center',
+        fontFamily: 'Raleway-Regular',
+        fontSize: 12,
+        color: '#A1A1A1',
     }
 })
 

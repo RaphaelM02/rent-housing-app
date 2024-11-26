@@ -4,19 +4,49 @@ import { useNavigation } from '@react-navigation/native';
 import propertiesData from "../info.json";
 import { Border, FontFamily, FontSize, Color } from "./GlobalStyles";
 import imageMapping from './imageMappings';
+import * as Location from 'expo-location';
+import Constants from "expo-constants";
+import getImageLink from "../functions/Google_Drive";
+import { useLocation } from "../functions/LocationContext";
 
-const locations = ["Jakarta", "Bali", "Surabaya", "Antelias"];
 const {width, height} = Dimensions.get("window");
+const googleApiKey = Constants.expoConfig.extra.googleApiKey;
 
 const SearchListing = () => {
+    const { latitude, longitude, locationName } = useLocation(); 
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [searchText, setSearchText] = useState("");
-    const [currentLocationIndex, setCurrentLocationIndex] = useState(0);
     const navigation = useNavigation();
 
-
+    //Function to navigate to the menu
     const handlePress = () => { navigation.navigate('Menu'); };
 
+    //Function to get the location between the user's current location and each property :
+    const toRadians = (degrees) => {
+        return degrees * (Math.PI / 180);
+    };
+    const harvesine = (lat1, lon1, lat2, lon2) => {
+        const earthRadius = 6371;
+
+        const lat1Rad = toRadians(lat1);
+        const lon1Rad = toRadians(lon1);
+        const lat2Rad = toRadians(lat2);
+        const lon2Rad = toRadians(lon2);
+
+        const dLat = lat2Rad - lat1Rad;
+        const dLon = lon2Rad - lon1Rad;
+
+        const harvesineFormula = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+        const c = 2 * Math.atan2(Math.sqrt(harvesineFormula), Math.sqrt(1 - harvesineFormula));
+
+        const distance = earthRadius * c;
+
+        return distance.toFixed(0);
+    };
+    //End function to get the location between the user's current location and each property
+
+    //Function to filter properties using the search bar
     const getFilteredProperties = () => {
         return propertiesData.filter(property => {
             const matchesCategory = selectedCategory ? property.type.toLowerCase() === selectedCategory.toLowerCase() : true;
@@ -25,26 +55,21 @@ const SearchListing = () => {
         });
     };
 
-    const filterPropertiesByDistance = (location) => {
+    //Function to filter the properties based on the distance betweent the property and the user
+    const filterPropertiesByDistance = () => {
         return propertiesData.sort((a,b) => {
-            const distanceA = a.distances[location];
-            const distanceB = b.distances[location];
+            const distanceA = harvesine(latitude, longitude, a.coordinates.latitude, a.coordinates.longitude);
+            const distanceB = harvesine(latitude, longitude, b.coordinates.latitude, b.coordinates.longitude);
             return distanceA - distanceB;
         });
     };
 
-    const getBestProperty = () => {
-        const filteredProperties = propertiesData.filter(property =>
-            property.location.toLowerCase().includes(locations[currentLocationIndex].toLowerCase())
-        );
-        return filteredProperties.sort((a, b) => a.price - b.price)[0];
-    };
-
+    //Function to render the properties images
     const renderImagesByLocation = (location) => {
         let sortedProperties = getFilteredProperties();
 
         if (!selectedCategory && !searchText){
-            sortedProperties = filterPropertiesByDistance(location);
+            sortedProperties = filterPropertiesByDistance();
         };
 
         return (
@@ -85,7 +110,7 @@ const SearchListing = () => {
                                         source={imageMapping["../assets/logo12.png"]}
                                     />
                                     <Text style={styles.propertyDistanceOnImage}>
-                                        {property.distances[locations[currentLocationIndex]]} km
+                                        {harvesine(latitude, longitude, property.coordinates.latitude, property.coordinates.longitude)} km
                                     </Text>
                                 </View>
                             </View>
@@ -96,11 +121,14 @@ const SearchListing = () => {
                 ))}
             </ScrollView>
         );
-    }
+    };
 
-    const changeLocation = () => { setCurrentLocationIndex((currentLocationIndex + 1) % locations.length); };
-
-    const bestProperty = getBestProperty();
+    //Function to get the best property (closest and cheapest)
+    const getBestProperty = (location) => {
+        const filteredPropertiesByDistance = filterPropertiesByDistance();
+        return filteredPropertiesByDistance.sort((a, b) => a.price - b.price)[0];
+    };
+    const bestProperty = getBestProperty(locationName);
 
     return (
         <ScrollView contentContainerStyle={[styles.scrollViewContainer]}>
@@ -109,7 +137,7 @@ const SearchListing = () => {
                 {/*Location and location changer*/}
                 <View style={styles.location}>
                     <Text style={styles.locationText}>Location</Text>
-                    <Text style={styles.locationName} onPress={changeLocation}>{locations[currentLocationIndex]} ▼</Text>
+                    <Text style={styles.locationName}>{locationName} </Text>
                     <Image
                         style={styles.icNotificationIcon}
                         resizeMode="cover"
@@ -227,7 +255,7 @@ const SearchListing = () => {
 
                 {/*Get the filtered properties by the distance from the selected location*/}
                 <Text style={styles.nearFromYou}>Near you</Text>
-                {renderImagesByLocation(locations[currentLocationIndex])}
+                {renderImagesByLocation(locationName)}
 
                 {/*Best property*/}
                 <Text style={styles.bestForYouText}>Best for you</Text>
@@ -295,7 +323,8 @@ const styles = StyleSheet.create({
     //Main :
     scrollViewContainer: {
         flexGrow: 1,
-        //padding: 10,
+        paddingBottom: 20,
+        backgroundColor: Color.colorWhite,
     },
 
     homeScreen: {
@@ -304,7 +333,7 @@ const styles = StyleSheet.create({
         paddingBottom : 20,
         overflow: "scroll",
         flexDirection: "column",
-        //position: "static",
+        justifyContent: "flex-start",
     },
     //End Main
 
@@ -334,16 +363,11 @@ const styles = StyleSheet.create({
         textAlign: "left",
     },
 
-    icArrowDownIcon: {
-        top: 25,
-        left: 100,
-    },
-
     icNotificationIcon: {
         height: "30",
         width: "30",
-        top: (0.01 * height),
-        left: (0.82 * width),
+        marginTop: (0.01 * height),
+        marginLeft: (0.82 * width),
         position: "absolute",
     },
     //End Top : Location + Name + Arrow + Notifications icon

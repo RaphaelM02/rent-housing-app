@@ -38,34 +38,18 @@ const SignUp = () => {
             return {valid: false, message: "Name must consists of 2 words.", field: 'name' };
         };
 
-        if (!name){
-            return {valid: false, message: "Name can't be empty.", field: 'name'};
-        };
-
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if ((email && !emailRegex.test(email))) {
             return {valid: false, message: "Invalid email format.", field: 'email' };
-        };
-
-        if (!email) {
-            return {valid: false, message: "Email can't be empty.", field: 'email'};
         };
 
         if ((password && password.length < 6)) {
             return {valid: false, message: "Password must be at least 6 characters long.", field: 'password' };
         };
 
-        if (!password){
-            return {valid: false, message: "Password can't be empty.", field: 'password'};
-        };
-
         const phoneNoRegex = /^(03|70|71|76|78|80|81)[0-9]{6}$/;
         if ((phoneNo && !phoneNoRegex.test(phoneNo))){
             return {valid: false, message: "Mobile not valid", field: 'phoneNo' };
-        };
-
-        if (!phoneNo){
-            return {valid: false, message: "Mobile number can't be empty.", field: 'phoneNo'};
         };
 
         if (!position) {
@@ -245,56 +229,62 @@ const styles = StyleSheet.create({
         flexGrow : 1,
         marginBottom: 20,
         marginTop: 50,
+        paddingHorizontal: 20,
     },
     mainImage: {
         alignSelf: 'center',
-        marginBottom: 15,
+        marginBottom: 30,
     },
-    input:{
-        height: 40,
-        margin: 12,
+    input: {
+        height: 50,
         borderWidth: 1,
-        paddingLeft : 5,
+        borderColor: '#D1D1D1',
+        borderRadius: 8,
+        paddingLeft: 15,
+        marginBottom: 15,
+        fontFamily: 'Raleway-Regular',
+        fontSize: 16,
     },
     buttonsContainer: {
-        width: '75%',
-        height: 40,
+        backgroundColor: '#4A90E2',
+        width: '100%',
+        height: 50,
         alignSelf: 'center',
-        alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 20,
+        alignItems: 'center',
+        borderRadius: 8,
+        marginBottom: 15,
     },
     logInText: {
+        color: '#FFF',
         fontFamily: 'Raleway-SemiBold',
-        borderWidth: 1,
-        height: '100%',
-        width: '100%',
+        fontSize: 16,
         textAlign: 'center',
     },
-    radioGroup:{
-        margin: 12,
+    radioGroup: {
         flexDirection: 'row',
-        alignSelf: 'center',
+        justifyContent: 'space-between',
         marginBottom: 20,
+        marginHorizontal: 12,
     },
     radioButton: {
-        borderWidth: 1,
-        borderRadius: 10,
+        marginRight: 10,
     },
-    rbLabelText:{
+    rbLabelText: {
         fontFamily: 'Raleway-Regular',
-        marginRight: 20,
+        fontSize: 16,
+        color: '#333',
     },
-    footerText:{
-        position: 'absolute',
-        bottom: 0,
-        alignSelf: 'center',
+    footerText: {
+        textAlign: 'center',
+        marginTop: 20,
+        color: '#A1A1A1',
     },
-    error:{
-        color:'red',
+    error: {
+        color: 'red',
         fontSize: 12,
         fontFamily: 'Raleway-SemiBold',
-        marginBottom: 20,
+        marginBottom: 15,
         textAlign: 'center',
     }
 });

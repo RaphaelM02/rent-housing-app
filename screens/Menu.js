@@ -13,6 +13,10 @@ const Menu = ({ navigation }) => {
     const handlePressHome = () => { navigation.navigate('Home'); };
     const handleLogoutPress = () => { navigation.navigate('LogIn'); };
     const handleHelpPress = () => { navigation.navigate('AddListing'); };
+    const handleBookPress = () => { navigation.navigate('SearchListing'); };
+
+    //Testing :
+    const handleNotificationsPress = () => { navigation.navigate('GoogleDrive'); };
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContainer} showsVerticalScrollIndicator={false}>
@@ -31,23 +35,23 @@ const Menu = ({ navigation }) => {
                     <Text style={styles.menuText}>Home</Text>
                 </TouchableOpacity>
 
-                {/*Bookmark Section*/}
+                {/*Book a listing Section*/}
                 <TouchableOpacity
                     style={styles.menuSections}
-                    onPress={handlePress}
+                    onPress={handleBookPress}
                 >
                     <Image
                         style={styles.menuIcons}
                         resizeMode="cover"
                         source={require("../assets/logo8.png")}
                     />
-                    <Text style={styles.menuText}>Bookmark</Text>
+                    <Text style={styles.menuText}>Book your property</Text>
                 </TouchableOpacity>
 
                 {/*Notifications Section*/}
                 <TouchableOpacity
                     style={styles.menuSections}
-                    onPress={handlePress}
+                    onPress={handleNotificationsPress}
                 >
                     <Image
                         style={styles.menuIcons}

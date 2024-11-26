@@ -12,6 +12,9 @@ import WhitePage from './screens/WhitePage';
 import DetailProductNew from './screens/DetailProductNew';
 import { User } from './screens/UserContext';
 import AddListing from './screens/AddListing';
+import { LocationProvider } from './functions/LocationContext';
+//Testing
+//import GetImageFromDrive from './functions/Google_Drive';
 import * as Font from 'expo-font';
 import 'react-native-get-random-values';
 
@@ -42,18 +45,21 @@ const AppNavigator = () => {
 
     return(
         <User>
-            <NavigationContainer>
-                <Stack.Navigator screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="LogIn" component={LogIn} />
-                    <Stack.Screen name="SignUp" component={SignUp} />
-                    <Stack.Screen name="Home" component={Home} />
-                    <Stack.Screen name="SearchListing" component={SearchListing} />
-                    <Stack.Screen name="Menu" component={Menu} />
-                    <Stack.Screen name="WhitePage" component={WhitePage} options={{ headerShown: true }} /> 
-                    <Stack.Screen name="DetailProduct" component={DetailProductNew} />
-                    <Stack.Screen name="AddListing" component={AddListing} />
-                </Stack.Navigator>
-            </NavigationContainer>
+            <LocationProvider>
+                <NavigationContainer>
+                    <Stack.Navigator screenOptions={{ headerShown: false }}>
+                        <Stack.Screen name="LogIn" component={LogIn} />
+                        <Stack.Screen name="SignUp" component={SignUp} />
+                        <Stack.Screen name="Home" component={Home} />
+                        <Stack.Screen name="SearchListing" component={SearchListing} />
+                        <Stack.Screen name="Menu" component={Menu} />
+                        <Stack.Screen name="WhitePage" component={WhitePage} options={{ headerShown: true }} /> 
+                        <Stack.Screen name="DetailProduct" component={DetailProductNew} />
+                        <Stack.Screen name="AddListing" component={AddListing} />
+                        {/*<Stack.Screen name="GoogleDrive" component={GetImageFromDrive} />*/}
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </LocationProvider>
         </User>
     );
 };

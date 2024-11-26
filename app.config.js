@@ -1,4 +1,4 @@
-{
+export default {
   "expo": {
     "name": "rent-housing-app",
     "slug": "rent-housing-app",
@@ -29,6 +29,7 @@
     ],
     "extra": {
       "googleApiKey": process.env.GOOGLE_PLACES_API,
+      "clientId": process.env.GOOGLE_DRIVE_EMAIL
     }
   }
 }

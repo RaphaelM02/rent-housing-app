@@ -355,8 +355,10 @@ const styles = StyleSheet.create({
                 position: "relative",
                 borderWidth: 1,
                 borderRadius: Border.br_3xs,
+                borderColor: Color.colorGray_100,
                 marginVertical: "1%",
                 marginHorizontal: "1%",
+                paddingLeft: 10,
                 height: "40",
                 fontFamily: "Raleway-Regular",
                 justifyContent: "center",
@@ -368,6 +370,7 @@ const styles = StyleSheet.create({
                 marginHorizontal: "1%",
                 borderWidth: 1,
                 borderRadius: Border.br_3xs,
+                borderColor: Color.colorGray_100,
                 height: "auto",
                 
                 // borderWidth: 2, //Debugging
