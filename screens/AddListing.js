@@ -17,7 +17,8 @@ const googleApiKey = Constants.expoConfig.extra.googleApiKey;
 
 const AddListing = () => {
     const [inputHidden, setInputHidden] = useState(false);
-    const {latitude , longitude, locationName, setLocationName} = useLocation();
+    const [isFechingLocation, setIsFetchingLocation] = useState(false);
+    const {latitude , longitude, locationName} = useLocation();
     const {user, login, logout} = useUser();
 
 
@@ -78,22 +79,6 @@ const AddListing = () => {
     //End fields and functions to update them
 
 
-    //Function to set the user once the screen is loaded :
-    /*
-    const updatePerson =  () => {
-        updateNestedField("person", "name", user.name);
-        updateNestedField("person", "image_url", "");
-        updateNestedField("person", "phonenumber", user.phoneNo);
-        updateNestedField("person", "email", user.email);
-        updateNestedField("person", "position", user.position);
-        console.log(user);
-        console.log(apartment.person);
-    };
-    () => updatePerson();
-    */
-    //End function to set the user once the screen is loaded
-
-
     //Function to upload the images :
     const uploadImages = async () => {
         try {
@@ -126,7 +111,7 @@ const AddListing = () => {
     //End function to save the location based on the marker postion
 
 
-    //Function to rende the map :
+    //Function to render the map :
     const LocationSelector = useCallback(() => {
         try {
             return (
@@ -140,10 +125,10 @@ const AddListing = () => {
                         placeholder="Search"
                         fetchDetails={true}
                         onPress={(data, details = null) => {
-                            if (data.description === "Current Location") {
+                            if (data.description.startsWith("Current location")) {
                                 setMarkerPosition({latitude, longitude});
                                 setRegion({ latitude, longitude, latitudeDelta: 0, longitudeDelta: 0.04});
-                                console.log(data.description);
+                                updateField("location", locationName);
                                 return;
                             }
                             if (details) {
@@ -151,7 +136,7 @@ const AddListing = () => {
                                     const { lat, lng } = details.geometry.location;
                                     setMarkerPosition({ latitude: lat, longitude: lng });
                                     setRegion({ latitude: lat, longitude: lng, latitudeDelta: 0, longitudeDelta: 0.04 });
-                                    setLocationName(details.address_components[0].long_name);
+                                    updateField("location",details.address_components[0].long_name);
                                 } catch (error) {
                                     console.log(error);
                                 }
@@ -176,11 +161,13 @@ const AddListing = () => {
                                 const { latitude, longitude } = e.nativeEvent.coordinate;
                                 setMarkerPosition({ latitude, longitude });
                                 setRegion({ latitude, longitude, latitudeDelta: 0, longitudeDelta: 0.04});
+                                getLocationName(latitude, longitude);
                             }}
                         >
                             <Marker coordinate= {markerPosition} title="You're here" />
                         </MemoizedMapView>
 
+                        {/*Overlay text*/}
                         <TouchableOpacity style={inputHidden? {display:"none"} : styles.overlayButton} onPress={() => setInputHidden(true)}>
                             <Text style={styles.overlayText}>Press here to select your location</Text>
                         </TouchableOpacity>
@@ -210,6 +197,36 @@ const AddListing = () => {
     //End function to render the map
 
 
+    //Function to get the location name based on the marker position :
+    const getLocationName = async (lat, lon) => {
+        setIsFetchingLocation(true);
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${googleApiKey}`;
+
+        try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.status === 'OK') {
+            const addressComponents = data.results[0].address_components;
+            let cityName = addressComponents.find(component => component.types.includes('locality'));
+            if (!cityName){
+                cityName = addressComponents.find(component => component.types.includes('administrative_area_level_1'));
+            }
+            console.log(cityName.long_name);
+            updateField("location", cityName ? cityName.long_name : 'City not found');
+        } else {
+            throw new Error('Error fetching the location');
+        }
+        } catch (error) {
+            console.log('Error fetching place name : ' + error);
+            updateField("location", "Error");
+        } finally {
+            setIsFetchingLocation(false);
+        }
+    };
+    //End function to get the location name based on the marker position
+
+
     //Function to check if the properties.json file exists and update it :
     const propertiesFile = FileSystem.documentDirectory + 'properties.json';
     const addListing = async () => {
@@ -220,7 +237,7 @@ const AddListing = () => {
                 return;
             };
 
-            await FileSystem.writeAsStringAsync(propertiesFile, JSON.stringify([])); //Use this to clear the users.json file when needed
+            //await FileSystem.writeAsStringAsync(propertiesFile, JSON.stringify([])); //Use this to clear the users.json file when needed
 
             const existingListingsJSON = await FileSystem.readAsStringAsync(propertiesFile);
             const existingListings = JSON.parse(existingListingsJSON);
@@ -253,16 +270,17 @@ const AddListing = () => {
     //End function to check if the properties.json file exists and update it
 
 
+    //Return based on the inputHidden state :
     return !inputHidden ? (
-        <ScrollView style={styles.mainContainer} /*behavior={Platform.OS === "ios" ? "padding" : "height"}*/ >
+        <ScrollView style={styles.mainContainer}>
             <View style= {styles.allContainer}>
                 {/*Title*/}
-                <View style={inputHidden ? {display: "none"} : styles.titleContainer}>
-                    <Text style={inputHidden? {display: "none"} : styles.titleText}>Add your listing</Text>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.titleText}>Add your listing</Text>
                 </View>
 
                 {/*Inputs*/}
-                <View style={inputHidden ? {display: "none"} : styles.inputsContainer}>
+                <View style={styles.inputsContainer}>
                     {/*Name*/}
                     <TextInput
                         style={styles.input}
