@@ -1,35 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Text, StyleSheet, Image, View, TouchableOpacity, ScrollView, TextInput, Dimensions, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import { Color , Border } from './GlobalStyles'
 import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import Constants from "expo-constants";
 import * as DocumentPicker from 'expo-document-picker';
-import * as Location from 'expo-location';
+import * as FileSystem from 'expo-file-system';
 import { Picker } from "@react-native-picker/picker";
+import { useLocation } from "../functions/LocationContext";
+import { useUser } from "./UserContext";
 
+const MemoizedGooglePlacesAutoComplete = React.memo(GooglePlacesAutocomplete);
+const MemoizedMapView = React.memo(MapView);
 const {width, height} = Dimensions.get("screen");
 const googleApiKey = Constants.expoConfig.extra.googleApiKey;
 
 const AddListing = () => {
+    const [inputHidden, setInputHidden] = useState(false);
+    const {latitude , longitude, locationName, setLocationName} = useLocation();
+    const {user, login, logout} = useUser();
+
+
     //Fields and function to update them :
     const [apartment, setApartment] = useState({
         location: "", //Location Selecter Done
         name: "", //Input Fields Done
-        photo_url: "",
+        photo_url: "", //Input Fields //Done// Image Selector
         price: "", //Input Fields Done
         type: "", //Input Fields //Done// TypeSelection
         bathroom: 0, //Input Fields Done
         bedroom: 0, //Input Fields Done
-        images: [], //Input Fields Done
+        images: [], //Input Fields //Done// Image Selector
         distances: {},
         description: "", //Input Fields Done
         person: {
-            name: "",
+            name: user.name,
             image_url: "",
-            phonenumber: "",
-            email: "",
-            position: "",
+            phonenumber: user.phoneNo,
+            email: user.email,
+            position: user.position,
         },
         coordinates: { //Location Selecter //Done// markerPosition
             latitude: null,
@@ -37,31 +46,21 @@ const AddListing = () => {
         },
     });
 
-    const [isMapLoaded, setIsMapLoaded] = React.useState(false);
-
-    const [inputHidden, setInputHidden] = useState(false);
-    const [location, setLocation] = useState("");
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState(0);
-    const [bathroom, setBathroom] = useState(0);
-    const [bedroom, setBedroom] = useState(0);
-    const [type, setType] = useState("");
-
     //Default marker position for the map :
     const [markerPosition, setMarkerPosition] = useState({
-        latitude: 33.888630,
-        longitude: 35.495480,
+        latitude: latitude,
+        longitude: longitude,
     });
 
     //Default region for the map based on the marker position :
     const [region, setRegion] = useState({
-        latitude: 33.888630,
-        longitude: 35.495480,
+        latitude: latitude,
+        longitude: longitude,
         latitudeDelta: 0.02,
         longitudeDelta: 0.04,
     });
 
+    //Functions to update fields
     const updateField = (key, value) => {
         setApartment((prev) => ({...prev, [key]:value}));
     };
@@ -75,11 +74,30 @@ const AddListing = () => {
             },
         }));
     };
+    //End function to update fields
     //End fields and functions to update them
+
+
+    //Function to set the user once the screen is loaded :
+    /*
+    const updatePerson =  () => {
+        updateNestedField("person", "name", user.name);
+        updateNestedField("person", "image_url", "");
+        updateNestedField("person", "phonenumber", user.phoneNo);
+        updateNestedField("person", "email", user.email);
+        updateNestedField("person", "position", user.position);
+        console.log(user);
+        console.log(apartment.person);
+    };
+    () => updatePerson();
+    */
+    //End function to set the user once the screen is loaded
+
 
     //Function to upload the images :
     const uploadImages = async () => {
         try {
+            let images = [];
             const result = await DocumentPicker.getDocumentAsync({
                 type: 'image/*',
                 copyToCacheDirectory: true,
@@ -88,152 +106,52 @@ const AddListing = () => {
             const document = result.assets;
             for (let index = 0; index < document.length; index++) {
                 const element = document[index];
-                updateField("images",apartment.images.push(element.uri));
+                images.push(element.uri);
             };
+            updateField("photo_url", images[0]);
+            updateField("images",images);
         } catch (error) {
             console.log(error);
         }
     };
+    //End function to upload the images
+
 
     //Function to save the location based on the marker postion :
     const savePosition = () => {
-        updateNestedField("coordinates", "latitude", markerPosition.latitude);
+        updateField("location", locationName);
         updateNestedField("coordinates", "longitude", markerPosition.longitude);
-        console.log(apartment.coordinates.latitude +"\n"+ apartment.coordinates.longitude
-        );
+        updateNestedField("coordinates", "latitude", markerPosition.latitude);
     };
+    //End function to save the location based on the marker postion
 
-    //Function to get the user's currnet location :
-    const getCurrentLocation = async () => {
-        try {
-            const { status } = await Location.requestForegroundPermissionsAsync();
-            if(status != "granted"){
-                Alert.alert("Location permissions are required to use this feature.");
-                return;
-            }
 
-            const location = await Location.getCurrentPositionAsync({
-                accuracy: Location.Accuracy.Highest,   
-            });
-
-            const { latitude, longitude} = location.coords;
-
-            setMarkerPosition({latitude, longitude});
-            setRegion({latitude, longitude, latitudeDelta: 0, longitudeDelta: 0.02});
-
-            return(latitude, longitude);
-
-        } catch (error) {
-            console.log(error);
-            Alert.alert("Unable to fetch location, please set it manually");
-        }
-    };
-
-    //Screen
-    const TypeSelection = () => {
-        return(
-            <View style={inputHidden ? {height: 0} : styles.typeSelectorContainer}>
-                <Picker
-                    selectedValue={type}
-                    onValueChange={(item, index) => setType(item)}
-                    style= {inputHidden ? {height: 0} : styles.typeSelector}
-                    placeholder="Select your property type"
-                >
-                    <Picker.Item label="Select your property type" value="" />
-                    <Picker.Item label="Cottage" value="Cottage" />
-                    <Picker.Item label="Villa" value="Villa" />
-                    <Picker.Item label="Apartment" value="Apartment" />
-                    <Picker.Item label="Hotel" value="Hotel" />
-                </Picker>
-            </View>
-        );
-    };
-
-    const InputFields = () => {
-        return(
-            <View style={inputHidden ? {height: 0} : styles.inputsContainer}>
-                {/*Name*/}
-                <TextInput
-                    style={inputHidden ? {height: 0} : styles.input}
-                    placeholder="Property Name"
-                    value={name}
-                    onChangeText={setName}
-                    autoCapitalize="words"
-                />
-
-                {/*Description*/}
-                <TextInput
-                    style={inputHidden ? {height: 0} : styles.input}
-                    placeholder="Description"
-                    value={description}
-                    onChangeText={setDescription}
-                />
-
-                {/*Price*/}
-                <TextInput
-                    style={inputHidden ? {height: 0} : styles.input}
-                    placeholder="Price"
-                    value={price}
-                    onChangeText={setPrice}
-                    keyboardType="numeric"
-                />
-
-                {/*Bathrooms*/}
-                <TextInput
-                    style={inputHidden ? {height: 0} : styles.input}
-                    placeholder="Bathrooms"
-                    value={bathroom}
-                    onChangeText={setBathroom}
-                    keyboardType="numeric"
-                />
-
-                {/*Bedrooms*/}
-                <TextInput
-                    style={inputHidden ? {height: 0} : styles.input}
-                    placeholder="Bedrooms"
-                    value={bedroom}
-                    onChangeText={setBedroom}
-                    keyboardType="numeric"
-                />
-
-                {/*Type*/}
-                <TypeSelection />
-
-                {/*Images*/}
-                <TouchableOpacity 
-                    style={inputHidden ? {height: 0} : styles.input}
-                    onPress={uploadImages}
-                >
-                        <Text style={inputHidden ? {height: 0} : styles.uploadImagesText}>Upload Images</Text>
-                </TouchableOpacity>
-                    
-            </View>
-        );
-    };
-
-    const LocationSelector = () => {
+    //Function to rende the map :
+    const LocationSelector = useCallback(() => {
         try {
             return (
                 <View style={styles.locationSelectorContainer}>
-                    <GooglePlacesAutocomplete
+                    
+                    <MemoizedGooglePlacesAutoComplete
                         styles={{
-                            container: styles.googleMapsContainer,
+                            container: inputHidden ? styles.googleMapsContainer : {display: "none"},
                             textInput: styles.googleMapsInput,
                         }}
                         placeholder="Search"
                         fetchDetails={true}
                         onPress={(data, details = null) => {
                             if (data.description === "Current Location") {
-                                getCurrentLocation();
+                                setMarkerPosition({latitude, longitude});
+                                setRegion({ latitude, longitude, latitudeDelta: 0, longitudeDelta: 0.04});
                                 console.log(data.description);
                                 return;
                             }
                             if (details) {
                                 try {
                                     const { lat, lng } = details.geometry.location;
-                                    console.log(data);
                                     setMarkerPosition({ latitude: lat, longitude: lng });
                                     setRegion({ latitude: lat, longitude: lng, latitudeDelta: 0, longitudeDelta: 0.04 });
+                                    setLocationName(details.address_components[0].long_name);
                                 } catch (error) {
                                     console.log(error);
                                 }
@@ -244,48 +162,37 @@ const AddListing = () => {
                             language: "en",
                         }}
                         predefinedPlaces={[{
-                            description: "Current Location",
-                            geometry: { location: { lat: 0, lng: 0 } },
+                            description: "Current location : " +locationName,
+                            geometry: { location: { lat: latitude, lng: longitude } },
                         },]}
                     />
 
                     <View style={inputHidden ? {height: 0.7 * height} : styles.mapContainer}>
-                        <MapView
+                        <MemoizedMapView
                             provider="google"
                             style={styles.mapStyle}
-                            initialRegion={{
-                                latitude: 33.888630,
-                                longitude: 35.495480,
-                                latitudeDelta: 0.02,
-                                longitudeDelta: 0.04,
-                            }}
-                            region={region}
-                            //loadingEnabled= {true}
-                            //onMapLoaded={() => {setIsMapLoaded(true); console.log(isMapLoaded)}}
+                            initialRegion={region}
                             onPress={(e) => {
-                                e.preventDefault();
-                                if (!inputHidden) { setInputHidden(true); }
-                                else {
-                                    const { latitude, longitude } = e.nativeEvent.coordinate;
-                                    setMarkerPosition({ latitude, longitude });
-                                    setRegion({latitude, longitude, latitudeDelta: 0, longitudeDelta: 0.04});
-                                }
+                                const { latitude, longitude } = e.nativeEvent.coordinate;
+                                setMarkerPosition({ latitude, longitude });
+                                setRegion({ latitude, longitude, latitudeDelta: 0, longitudeDelta: 0.04});
                             }}
-                            /*
-                            onRegionChangeComplete={(newRegion) => {
-                                setRegion(newRegion);
-                                setMarkerPosition({latitude: newRegion.latitude, longitude: newRegion.longitude});
-                            }}
-                            */
                         >
-                            <Marker coordinate= {!markerPosition ? {latitude: 33.888630, longitude: 35.495480} : markerPosition} />
-                        </MapView>
+                            <Marker coordinate= {markerPosition} title="You're here" />
+                        </MemoizedMapView>
+
+                        <TouchableOpacity style={inputHidden? {display:"none"} : styles.overlayButton} onPress={() => setInputHidden(true)}>
+                            <Text style={styles.overlayText}>Press here to select your location</Text>
+                        </TouchableOpacity>
 
                         {/*Save posistion button*/}
                         <View style={ inputHidden ? styles.saveLocationContainer : { height: 0 } } >
                             <TouchableOpacity 
                                 style={ inputHidden ? styles.saveLocationButton : { height: 0 } }
-                                onPress={() => setInputHidden(false)}
+                                onPress={() => {
+                                    setInputHidden(false);
+                                    savePosition();
+                                }}
                             >
                                 <Text style={ inputHidden ? styles.saveLocationText : { height: 0 } }>Save postion</Text>
                             </TouchableOpacity>
@@ -299,26 +206,147 @@ const AddListing = () => {
                 <Text>Error rendering the map</Text>
             )
         }
+    }, [markerPosition, region, inputHidden]);
+    //End function to render the map
+
+
+    //Function to check if the properties.json file exists and update it :
+    const propertiesFile = FileSystem.documentDirectory + 'properties.json';
+    const addListing = async () => {
+        try {
+            const fileExists = await FileSystem.getInfoAsync(propertiesFile);
+            if(!fileExists.exists){
+                await FileSystem.writeAsStringAsync(propertiesFile, JSON.stringify([]));
+                return;
+            };
+
+            await FileSystem.writeAsStringAsync(propertiesFile, JSON.stringify([])); //Use this to clear the users.json file when needed
+
+            const existingListingsJSON = await FileSystem.readAsStringAsync(propertiesFile);
+            const existingListings = JSON.parse(existingListingsJSON);
+
+            const newListing = {
+                location: apartment.location,
+                name: apartment.name,
+                photo_url: apartment.photo_url,
+                price: apartment.price,
+                type: apartment.type,
+                bathroom: apartment.bathroom,
+                bedroom: apartment.bedroom,
+                images: apartment.images,
+                distances: apartment.distances,
+                description: apartment.description,
+                person: apartment.person,
+                coordinates: apartment.coordinates,
+            };
+
+            existingListings.push(newListing);
+            console.log(existingListings); //Checking if the data was entered correctly
+
+            await FileSystem.writeAsStringAsync(propertiesFile, JSON.stringify(existingListings));
+            Alert.alert("Property registered succesfully");
+        } catch (error) {
+            console.log(error);
+            Alert.alert("Error while uploading property, please try again later. If the issue persists please contact us.");
+        }
     };
+    //End function to check if the properties.json file exists and update it
 
-    const SaveButton = () => {
-        return(
-            <View style={inputHidden ? {height: 0} : styles.savePropertyContainer}>
-                <TouchableOpacity style={styles.savePropertyButton}>
-                    <Text style={styles.savePropertyText}>Add your listing</Text>
-                </TouchableOpacity>
-            </View>
-        );
-    }
 
-    return(
-        <KeyboardAvoidingView style={styles.mainContainer} behavior={Platform.OS === "ios" ? "padding" : "height"} >
+    return !inputHidden ? (
+        <ScrollView style={styles.mainContainer} /*behavior={Platform.OS === "ios" ? "padding" : "height"}*/ >
             <View style= {styles.allContainer}>
-                <InputFields />
+                {/*Title*/}
+                <View style={inputHidden ? {display: "none"} : styles.titleContainer}>
+                    <Text style={inputHidden? {display: "none"} : styles.titleText}>Add your listing</Text>
+                </View>
+
+                {/*Inputs*/}
+                <View style={inputHidden ? {display: "none"} : styles.inputsContainer}>
+                    {/*Name*/}
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Property Name"
+                        value={apartment.name}
+                        onChangeText={(name) => updateField("name", name)}
+                        autoCapitalize="words"
+                    />
+
+                    {/*Description*/}
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Description"
+                        value={apartment.description}
+                        onChangeText={(description) => updateField("description", description)}
+                        autoCapitalize= "sentences"
+                    />
+
+                    {/*Price*/}
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Price"
+                        value={apartment.price}
+                        onChangeText={(price) => updateField("price", price)}
+                        keyboardType="numeric"
+                    />
+
+                    {/*Bathrooms*/}
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Bathrooms"
+                        value={apartment.bathroom}
+                        onChangeText={(bathroom) => updateField("bathroom",bathroom)}
+                        keyboardType="numeric"
+                    />
+
+                    {/*Bedrooms*/}
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Bedrooms"
+                        value={apartment.bedroom}
+                        onChangeText={(bedroom) => updateField("bedroom",bedroom)}
+                        keyboardType="numeric"
+                    />
+
+                    {/*Type*/}
+                    <View style={styles.typeSelectorContainer}>
+                        <Picker
+                            selectedValue={apartment.type}
+                            onValueChange={(type) => updateField("type", type)}
+                            style= {styles.typeSelector}
+                            placeholder="Select your property type"
+                        >
+                            <Picker.Item label="Select your property type" value="" />
+                            <Picker.Item label="Cottage" value="Cottage" />
+                            <Picker.Item label="Villa" value="Villa" />
+                            <Picker.Item label="Apartment" value="Apartment" />
+                            <Picker.Item label="Hotel" value="Hotel" />
+                        </Picker>
+                    </View>
+
+                    {/*Images*/}
+                    <TouchableOpacity 
+                        style={styles.input}
+                        onPress={uploadImages}
+                    >
+                        <Text style={styles.uploadImagesText}>Upload Images (First image will be the main)</Text>
+                    </TouchableOpacity>
+                </View>
+
                 <LocationSelector />
-                <SaveButton />
+
+                {/*Save Button*/}
+                <View style={inputHidden ? {display: "none"} : styles.savePropertyContainer}>
+                    <TouchableOpacity style={styles.savePropertyButton} onPress={addListing}>
+                        <Text style={styles.savePropertyText}>Add your listing</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </KeyboardAvoidingView>
+        </ScrollView>
+    ) : (
+        <View style={styles.inputHiddenMapContainer}>
+            <LocationSelector />
+        </View>
     );
 };
 
@@ -326,25 +354,52 @@ const styles = StyleSheet.create({
     //Main container :
     mainContainer: {
         flexGrow: 1,
+        //overflow:"scroll",
     },
 
     allContainer: {
-        marginVertical: "10%",
+        marginVertical : "10%",
         flex: 1,
         flexDirection: "column",
-        overflow: "scroll",
+        //overflow: "scroll",
 
         //borderWidth: 2, //Debugging
         //borderColor: "blue", //Debugging
     },
 
+    titleContainer: {
+        position: "relative",
+        backgroundColor: "rgba(0,0,0,0.1)",
+        height: "7%",
+        justifyContent: "center",
+
+        //borderWidth: 2, //Debugging
+        //borderColor: "green", //Debugging
+    },
+
+    titleText: {
+        color: Color.colorBlack,
+        fontFamily: "Raleway-SemiBold",
+        fontSize: 25,
+        textAlign: "center",
+    },
+
         //Container for all the inputs :
         inputsContainer: {
             height: "auto",
-            width: "100%",
             flexDirection: "column",
             position: "relative",
             marginVertical: "2%",
+            borderColor: Color.colorGray_200,
+            borderRadius: Border.br_3xs,
+            borderWidth: 1,
+            marginHorizontal: "2%",
+            shadowColor: Color.colorWhite,
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 2,
+            backgroundColor: "rgba(0,0,0,0.1)",
 
             //borderWidth: 2, //Debugging
             //borderColor: "green", //Debugging
@@ -355,23 +410,36 @@ const styles = StyleSheet.create({
                 position: "relative",
                 borderWidth: 1,
                 borderRadius: Border.br_3xs,
-                borderColor: Color.colorGray_100,
-                marginVertical: "1%",
-                marginHorizontal: "1%",
-                paddingLeft: 10,
-                height: "40",
+                borderColor: Color.colorGray_200,
+                marginVertical: "3%",
+                marginHorizontal: "2%",
+                padding: 12,
                 fontFamily: "Raleway-Regular",
-                justifyContent: "center",
+                fontSize: 16,
+                shadowColor: "#000",
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 10,
+                backgroundColor: Color.colorWhite,
             },
 
             //Type selector
             typeSelectorContainer: {
                 position: "relative",
-                marginHorizontal: "1%",
                 borderWidth: 1,
                 borderRadius: Border.br_3xs,
-                borderColor: Color.colorGray_100,
-                height: "auto",
+                borderColor: Color.colorGray_200,
+                marginVertical: "3%",
+                marginHorizontal: "2%",
+                fontFamily: "Raleway-Regular",
+                fontSize: 16,
+                shadowColor: "#000",
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 10,
+                backgroundColor: Color.colorWhite,
                 
                 // borderWidth: 2, //Debugging
                 // borderColor: "green", //Debugging
@@ -391,11 +459,9 @@ const styles = StyleSheet.create({
 
         //Map & search container
         locationSelectorContainer: {
-            //width: "100%",
             height: "auto",
             position: "relative",
             flexDirection: "column",
-            borderWidth: 1,
             marginHorizontal: "1%",
 
             //borderWidth: 2, //Debugging
@@ -430,8 +496,8 @@ const styles = StyleSheet.create({
             //Map container :
             mapContainer: {
                 position: "relative",
-                width: "100%",
                 height: 250,
+                marginHorizontal: "2%",
 
                 //borderWidth: 2, //Debugging
                 //borderColor: "red", //Debugging
@@ -441,8 +507,7 @@ const styles = StyleSheet.create({
                 mapStyle: {
                     ...StyleSheet.absoluteFillObject,
                     position: "relative",
-                    height: "100%",
-                    marginHorizontal: "2%",
+                    flex: 1,
                 },
 
                 saveLocationContainer:{
@@ -472,7 +537,38 @@ const styles = StyleSheet.create({
                     textAlign: "center",
                     color: Color.colorWhite,
                 },
+
+                //Overlay :
+                overlayButton: {
+                    ...StyleSheet.absoluteFillObject,
+                    position: 'absolute',
+                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    borderRadius: 5,
+                    zIndex: 2,
+                    justifyContent: "center",
+
+                    //borderWidth: 2, //Debugging
+                    //borderColor: "blue", //Debugging
+                },
+
+                overlayText: {
+                    color: 'white',
+                    fontSize: 16,
+                    textAlign: 'center',
+                },
+                //End overlay
             //End map container
+        
+        //Input hidden map :
+        inputHiddenMapContainer: {
+            display: "flex",
+            flexDirection: "column",
+            overflow: "scroll",
+            marginVertical: "10%",
+
+            //borderWidth: 2,
+            //borderColor: "blue",
+        },
         //End map & search container
 
         //Save property section :

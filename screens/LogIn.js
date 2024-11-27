@@ -21,6 +21,7 @@ const LogIn = () => {
 
     const passowrdInputRef = React.useRef(null);
     const handleEmailInputSubmit = () => {passowrdInputRef.current.focus();};
+    
 
     const handleLoginNew = async () => {
         try {
@@ -43,6 +44,7 @@ const LogIn = () => {
                 navigation.navigate("Home");
                 login({
                     name: user.name,
+                    phoneNo : user.phoneNo,
                     email: user.email,
                     position: user.position,
                 })
