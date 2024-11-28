@@ -21,6 +21,9 @@ const DetailProductNew = () => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [isDescriptionExpanded, setIsDescriptionExpanded] = React.useState(false);
 
+
+    //
+    console.log("Owner image : " +ownerImage);
     //Function to render the property main image, name, price, bedrooms, bathrooms, home and bookmark icons
     const RenderPropertyMainImage = () => {
         return (
@@ -122,7 +125,7 @@ const DetailProductNew = () => {
                 <Image
                     style={styles.ownerImageStyle}
                     resizeMode="cover"
-                    source={{uri : ownerImage}}
+                    source={{uri: ownerImage}}
                 />
                 
                 {/*Owner name & postion*/}

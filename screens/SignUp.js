@@ -4,6 +4,7 @@ import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
 import { useNavigation } from '@react-navigation/native';
 import imageMapping from "./imageMappings";
 import * as FileSystem from 'expo-file-system';
+import * as DocumentPicker from 'expo-document-picker';
 
 const SignUp = () => {
     const navigation = useNavigation();
@@ -13,6 +14,8 @@ const SignUp = () => {
     const [password, setPassword] = React.useState('');
     const [phoneNo, setPhoneNo] = React.useState('');
     const [position, setPosition] = React.useState('Owner');
+    const [avatar, setAvatar] = React.useState(null);
+    const [isImageUploaded, setIsImageUploaded] = React.useState(false);
     const [errorMessages, setErrorMessages] = React.useState({
         name: '',
         email: '',
@@ -21,7 +24,7 @@ const SignUp = () => {
         position: '',
     });
 
-    const usersFile = FileSystem.documentDirectory + 'users.json'
+    const usersFile = FileSystem.documentDirectory + 'users.json';
     
     const emailInputRef = React.useRef(null);
     const passwordInputRef = React.useRef(null);
@@ -31,6 +34,23 @@ const SignUp = () => {
     const handleEmailInputSubmit = () => {passwordInputRef.current.focus();};
     const handlePassowrdInputSubmit = () => {phoneNoInputRef.current.focus();};
 
+
+    const uploadImage = async () => {
+        try {
+            let userImage;
+            const result = await DocumentPicker.getDocumentAsync({
+                type: 'image/*',
+                copyToCacheDirectory: true,
+                multiple: false,
+            });
+            const document = result.assets;
+            console.log(document[0].uri);
+            setAvatar(document[0].uri);
+            console.log("Avatar end : " +avatar);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const validateInputs = (name, email, password, phoneNo, position) => {
         const nameRegex = /^[A-Za-z]+ [A-Za-z]+$/;
@@ -128,11 +148,13 @@ const SignUp = () => {
                 return;
             };
 
-            const newUser = {name, email, password, phoneNo, position};
+            const newUser = {name, email, password, phoneNo, position, avatar};
+            console.log(newUser);
             existingUsers.push(newUser);
 
             await FileSystem.writeAsStringAsync(usersFile, JSON.stringify(existingUsers));
             Alert.alert("User registered succesfully !");
+            navigation.navigate('LogIn');
         } catch (error) {
             console.log(error);
             Alert.alert("Error !", "An error occured while trying to save");
@@ -211,6 +233,10 @@ const SignUp = () => {
 
             </RadioButtonGroup>
 
+            <TouchableOpacity style={styles.imagePicker} onPress={uploadImage}>
+                <Image style={avatar ? styles.imagePickerImgPicked : styles.imagePickerImg} source={avatar ? {uri: avatar} : imageMapping['personIcon']} resizeMode="cover" />
+            </TouchableOpacity>
+
             <TouchableOpacity onPress={handleValidation} style={styles.buttonsContainer}>
                 <Text style={styles.logInText}>Sign Up</Text>
             </TouchableOpacity>
@@ -286,7 +312,24 @@ const styles = StyleSheet.create({
         fontFamily: 'Raleway-SemiBold',
         marginBottom: 15,
         textAlign: 'center',
-    }
+    },
+    imagePicker: {
+        borderRadius: 9999,
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
+        width: 120,
+        height: 120,
+        backgroundColor: "rgba(0,0,0,0.1)",
+        marginBottom: 15,
+    },
+    imagePickerImg: {
+        borderRadius: 9999,
+    },
+    imagePickerImgPicked: {
+        ...StyleSheet.absoluteFillObject,
+        borderRadius: 9999.
+    },
 });
 
 export default SignUp;

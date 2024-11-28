@@ -10,6 +10,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useLocation } from "../functions/LocationContext";
 import { useUser } from "./UserContext";
 import { useListings } from "../functions/LoadListings";
+import { useNavigation } from "@react-navigation/native";
 
 const MemoizedGooglePlacesAutoComplete = React.memo(GooglePlacesAutocomplete);
 const MemoizedMapView = React.memo(MapView);
@@ -17,6 +18,7 @@ const {width, height} = Dimensions.get("screen");
 const googleApiKey = Constants.expoConfig.extra.googleApiKey;
 
 const AddListing = () => {
+    const navigation = useNavigation();
     const [inputHidden, setInputHidden] = useState(false);
     const [isFechingLocation, setIsFetchingLocation] = useState(false);
     const {latitude , longitude, locationName} = useLocation();
@@ -38,7 +40,7 @@ const AddListing = () => {
         description: "", //Input Fields Done
         person: {
             name: user.name,
-            image_url: "",
+            image_url: user.avatar,
             phonenumber: user.phoneNo,
             email: user.email,
             position: user.position,
@@ -265,6 +267,7 @@ const AddListing = () => {
             await FileSystem.writeAsStringAsync(propertiesFile, JSON.stringify(existingListings));
             await viewListings();
             Alert.alert("Property registered succesfully");
+            navigation.navigate('Home');
         } catch (error) {
             console.log(error);
             Alert.alert("Error while uploading property, please try again later. If the issue persists please contact us.");

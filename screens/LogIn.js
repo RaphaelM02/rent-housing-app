@@ -47,7 +47,9 @@ const LogIn = () => {
                     phoneNo : user.phoneNo,
                     email: user.email,
                     position: user.position,
-                })
+                    avatar: user.avatar,
+                });
+                console.log(user);
             }
         } catch (error) {
             console.log(error);

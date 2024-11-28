@@ -17,6 +17,7 @@ import { LocationProvider } from './functions/LocationContext';
 import { ListingsProvider } from './functions/LoadListings';
 import * as Font from 'expo-font';
 import 'react-native-get-random-values';
+import * as FileSystem from 'expo-file-system';
 
 const Stack = createStackNavigator();
 
@@ -31,6 +32,9 @@ const AppNavigator = () => {
     };
     
     const [fontsLoaded, setFontsLoaded] = React.useState(false);
+
+    FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'properties.json', JSON.stringify([])); //Use this to clear the properties.json file when needed
+    FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'users.json', JSON.stringify([])); //Use this to clear the users.json file when needed
 
     useEffect(() => {
         loadFonts().then(() => {
