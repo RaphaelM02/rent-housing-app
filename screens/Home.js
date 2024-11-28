@@ -267,52 +267,58 @@ const styles = StyleSheet.create({
     //End slideshow
 
     // Services Section
-  servicesContainer: {
-    marginTop: 20,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: "#f9f9f9",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  servicesTitle: {
-    fontSize: 24,
-    fontFamily: "Raleway-SemiBold",
-    textAlign: "center",
-    color: "#333",
-    marginBottom: 10,
-  },
-  servicesList: {
-    marginTop: 10,
-  },
-  serviceItem: {
-    flexDirection: "column",
-    alignItems: "center",
-    marginBottom: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-    borderRadius: 10,
-    backgroundColor: "#fff",
-  },
-  serviceText: {
-    fontSize: 18,
-    fontFamily: "Raleway-SemiBold",
-    color: "#333",
-    marginTop: 8,
-  },
-  serviceDescription: {
-    fontSize: 14,
-    fontFamily: "Raleway-Regular",
-    color: "#666",
-    textAlign: "center",
-    marginTop: 5,
-    lineHeight: 20,
-  },
+    servicesContainer: {
+        marginTop: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        backgroundColor: "#f9f9f9",
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+
+    servicesTitle: {
+        fontSize: 24,
+        fontFamily: "Raleway-SemiBold",
+        textAlign: "center",
+        color: "#333",
+        marginBottom: 10,
+    },
+
+    servicesList: {
+        marginTop: 10,
+    },
+
+    serviceItem: {
+        flexDirection: "column",
+        alignItems: "center",
+        marginBottom: 20,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: "#e0e0e0",
+        borderRadius: 10,
+        backgroundColor: "#fff",
+    },
+
+    serviceText: {
+        fontSize: 18,
+        fontFamily: "Raleway-SemiBold",
+        color: "#333",
+        marginTop: 8,
+    },
+
+    serviceDescription: {
+        fontSize: 14,
+        fontFamily: "Raleway-Regular",
+        color: "#666",
+        textAlign: "center",
+        marginTop: 5,
+        lineHeight: 20,
+    },
+    //End services section
 });
 
 export default Home;
