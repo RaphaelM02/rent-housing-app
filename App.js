@@ -1,6 +1,7 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text } from 'react-native';
+import { createNavigationContainerRef } from '@react-navigation/native';
+import { Text, BackHandler } from 'react-native';
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import LogIn from './screens/LogIn';
@@ -13,14 +14,13 @@ import DetailProductNew from './screens/DetailProductNew';
 import { User } from './screens/UserContext';
 import AddListing from './screens/AddListing';
 import { LocationProvider } from './functions/LocationContext';
-//Testing
-//import GetImageFromDrive from './functions/Google_Drive';
 import * as Font from 'expo-font';
 import 'react-native-get-random-values';
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
+    const navigationRef = useNavigationContainerRef();
     const loadFonts = async () =>{
         await Font.loadAsync({
             'Raleway-Medium': require('./assets/fonts/Raleway-Medium.ttf'),
@@ -37,6 +37,22 @@ const AppNavigator = () => {
         });
     });
 
+    useEffect(() => {
+        const handleBackPress = () => {
+            const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
+
+            if(currentRoute && currentRoute !== 'Home' && currentRoute !== 'LogIn'){
+                navigationRef.current?.navigate('Home');
+                return true;
+            }
+            return false;
+        };
+
+        const backButtonHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+        return () => backButtonHandler.remove();
+    }, [navigationRef]);
+
     if(!fontsLoaded){
         return(
             <Text>Loading ...</Text>
@@ -46,7 +62,7 @@ const AppNavigator = () => {
     return(
         <User>
             <LocationProvider>
-                <NavigationContainer>
+                <NavigationContainer ref={navigationRef}>
                     <Stack.Navigator screenOptions={{ headerShown: false }}>
                         <Stack.Screen name="LogIn" component={LogIn} />
                         <Stack.Screen name="SignUp" component={SignUp} />
@@ -56,7 +72,6 @@ const AppNavigator = () => {
                         <Stack.Screen name="WhitePage" component={WhitePage} options={{ headerShown: true }} /> 
                         <Stack.Screen name="DetailProduct" component={DetailProductNew} />
                         <Stack.Screen name="AddListing" component={AddListing} />
-                        {/*<Stack.Screen name="GoogleDrive" component={GetImageFromDrive} />*/}
                     </Stack.Navigator>
                 </NavigationContainer>
             </LocationProvider>

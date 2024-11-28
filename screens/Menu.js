@@ -1,22 +1,14 @@
 import * as React from "react";
-import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions, ScrollView } from "react-native";
-import { FontFamily, Color, FontSize, Border } from "./GlobalStyles";
+import { StyleSheet, View, Image, Text, TouchableOpacity, ScrollView } from "react-native";
 import imageMapping from "./imageMappings";
-import { useUser } from "./UserContext";
-
-const {width, height} = Dimensions.get("window");
 
 const Menu = ({ navigation }) => {
-    const {user, logout} = useUser();
 
-    const handlePress = () => { navigation.navigate('WhitePage'); };
+    //const handlePress = () => { navigation.navigate('WhitePage'); }; //Removed all components leading to the WhiteScreen.js
     const handlePressHome = () => { navigation.navigate('Home'); };
     const handleLogoutPress = () => { navigation.navigate('LogIn'); };
     const handleHelpPress = () => { navigation.navigate('AddListing'); };
     const handleBookPress = () => { navigation.navigate('SearchListing'); };
-
-    //Testing :
-    const handleNotificationsPress = () => { navigation.navigate('GoogleDrive'); };
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContainer} showsVerticalScrollIndicator={false}>
@@ -45,10 +37,11 @@ const Menu = ({ navigation }) => {
                         resizeMode="cover"
                         source={require("../assets/logo8.png")}
                     />
-                    <Text style={styles.menuText}>Book your property</Text>
+                    <Text style={styles.menuText}>Book a property</Text>
                 </TouchableOpacity>
 
                 {/*Notifications Section*/}
+                {/*
                 <TouchableOpacity
                     style={styles.menuSections}
                     onPress={handleNotificationsPress}
@@ -60,8 +53,10 @@ const Menu = ({ navigation }) => {
                     />
                     <Text style={styles.menuText}>Notifications</Text>
                 </TouchableOpacity>
+                */}
 
                 {/*Nearby Section*/}
+                {/*}
                 <TouchableOpacity
                     style={styles.menuSections}
                     onPress={handlePress}
@@ -73,8 +68,10 @@ const Menu = ({ navigation }) => {
                     />
                     <Text style={styles.menuText}>Nearby</Text>
                 </TouchableOpacity>
+                */}
 
                 {/*Messages Section*/}
+                {/*
                 <TouchableOpacity
                     style={styles.menuSections}
                     onPress={handlePress}
@@ -86,8 +83,10 @@ const Menu = ({ navigation }) => {
                     />
                     <Text style={styles.menuText}>Messages</Text>
                 </TouchableOpacity>
+                */}
 
                 {/*Settings Section*/}
+                {/*
                 <TouchableOpacity
                     style={styles.menuSections}
                     onPress={handlePress}
@@ -99,8 +98,10 @@ const Menu = ({ navigation }) => {
                     />
                     <Text style={styles.menuText}>Settings</Text>
                 </TouchableOpacity>
+                */}
 
                 {/*Profile Section*/}
+                {/*
                 <TouchableOpacity
                     style={styles.menuSections}
                     onPress={handlePress}
@@ -112,8 +113,9 @@ const Menu = ({ navigation }) => {
                     />
                     <Text style={styles.menuText}>Profile</Text>
                 </TouchableOpacity>
+                */}
 
-                {/*Help Section*/}
+                {/*Add a listing Section*/}
                 <TouchableOpacity
                     style={styles.menuSections}
                     onPress={handleHelpPress}
@@ -121,9 +123,9 @@ const Menu = ({ navigation }) => {
                     <Image
                         style={styles.menuIcons}
                         resizeMode="cover"
-                        source={require("../assets/logo14.png")}
+                        source={imageMapping.plusIcon}
                     />
-                    <Text style={styles.menuText}>Help</Text>
+                    <Text style={styles.menuText}>List your property</Text>
                 </TouchableOpacity>
 
                 {/*Logout Section*/}
@@ -144,18 +146,21 @@ const Menu = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    //Scroll view container :
     scrollViewContainer: {
         flexGrow: 1,
         paddingVertical: 30,
     },
 
+    ///Main container
     menu: {
         flex: 1,
         justifyContent: "space-evenly",
         paddingHorizontal: "5%",
         backgroundColor: "#f9f9f9",
     },
-      
+    
+    //Each section of the menu
     menuSections: {
         flexDirection: "row",
         alignItems: "center",
@@ -170,13 +175,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         width: "100%",
     },
-      
+    
+    //Menu icons
     menuIcons: {
         width: 40,
         height: 40,
         marginRight: 10,
     },
-      
+    
+    //Menu text
     menuText: {
         fontSize: 16,
         fontWeight: "600",

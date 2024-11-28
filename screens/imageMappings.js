@@ -22,6 +22,7 @@ const imageMapping = {
     "bookmarkIcon" : require("../assets/logo8.png"),
     "phoneIcon" : require("../assets/logo9.png"),
     "messageIcon" : require("../assets/logo10.png"),
+    "plusIcon" : require("../assets/plus_logo.png"),
     //Antelias Property 
     "../assets/images/outdoor.jpg" : require("../assets/images/outdoor.jpg"),
     "../assets/images/outdoor-1.jpg" : require("../assets/images/outdoor-1.jpg"),
