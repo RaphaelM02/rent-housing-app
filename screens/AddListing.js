@@ -9,6 +9,7 @@ import * as FileSystem from 'expo-file-system';
 import { Picker } from "@react-native-picker/picker";
 import { useLocation } from "../functions/LocationContext";
 import { useUser } from "./UserContext";
+import { useListings } from "../functions/LoadListings";
 
 const MemoizedGooglePlacesAutoComplete = React.memo(GooglePlacesAutocomplete);
 const MemoizedMapView = React.memo(MapView);
@@ -20,6 +21,7 @@ const AddListing = () => {
     const [isFechingLocation, setIsFetchingLocation] = useState(false);
     const {latitude , longitude, locationName} = useLocation();
     const {user, login, logout} = useUser();
+    const {viewListings} = useListings();
 
 
     //Fields and function to update them :
@@ -237,7 +239,7 @@ const AddListing = () => {
                 return;
             };
 
-            //await FileSystem.writeAsStringAsync(propertiesFile, JSON.stringify([])); //Use this to clear the users.json file when needed
+            //await FileSystem.writeAsStringAsync(propertiesFile, JSON.stringify([])); //Use this to clear the properties.json file when needed
 
             const existingListingsJSON = await FileSystem.readAsStringAsync(propertiesFile);
             const existingListings = JSON.parse(existingListingsJSON);
@@ -261,6 +263,7 @@ const AddListing = () => {
             console.log(existingListings); //Checking if the data was entered correctly
 
             await FileSystem.writeAsStringAsync(propertiesFile, JSON.stringify(existingListings));
+            await viewListings();
             Alert.alert("Property registered succesfully");
         } catch (error) {
             console.log(error);

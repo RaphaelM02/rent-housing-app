@@ -17,7 +17,7 @@ const DetailProductNew = () => {
     const handlePhonePress = () => { Linking.openURL(`tel:${phonenumber}`); };
     const handleEmailPress = () => { Linking.openURL(`mailto:${email}`); };
 
-    const {location, propertyName, propertyImage, price, bathrooms, bedrooms, images, description, ownerName, ownerImage, phonenumber, email} = route.params;
+    const {location, propertyName, propertyImage, price, bathrooms, bedrooms, images, description, ownerName, ownerImage, phonenumber, email, position} = route.params;
     const [modalVisible, setModalVisible] = React.useState(false);
     const [isDescriptionExpanded, setIsDescriptionExpanded] = React.useState(false);
 
@@ -57,7 +57,7 @@ const DetailProductNew = () => {
                 {/*Name and price*/}
                 <View style={styles.properyNameAndPriceContainer}>
                     <Text style={styles.propertyName}>{propertyName}</Text>
-                    <Text style={styles.propertyPrice}>{price}</Text>
+                    <Text style={styles.propertyPrice}>$ {price} Per month</Text>
                 </View>
 
                 {/*Bedrooms and bathrooms container*/}
@@ -128,7 +128,7 @@ const DetailProductNew = () => {
                 {/*Owner name & postion*/}
                 <View style={styles.ownerNameContainer}>
                     <Text style={styles.ownerNameText}>{ownerName}</Text>
-                    <Text style={styles.ownerPositionText}>Owner</Text>
+                    <Text style={styles.ownerPositionText}>{position}</Text>
                 </View>
 
                 {/*Call and email icons*/}
@@ -175,7 +175,7 @@ const DetailProductNew = () => {
                 <Image
                     style={styles.galleryImage}
                     resizeMode="cover"
-                    source={imageMapping[item]}
+                    source={{ uri: images[index]}}
                 />
             );
         }
@@ -188,7 +188,7 @@ const DetailProductNew = () => {
                         <Image
                             style={styles.galleryImage}
                             resizeMode="cover"
-                            source={imageMapping[item]}
+                            source={{ uri: images[index]}}
                         />
                         {images.length > 4 && (
                             <View style={styles.overlay}>
@@ -210,8 +210,14 @@ const DetailProductNew = () => {
                     initialRegion={{
                         latitude: location.latitude,
                         longitude: location.longitude,
-                        latitudeDelta: 0.092,
-                        longitudeDelta: 0.041,
+                        latitudeDelta: 0.02,
+                        longitudeDelta: 0.04,
+                    }}
+                    region={{
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                        latitudeDelta: 0.02,
+                        longitudeDelta: 0.04,
                     }}
                     scrollEnabled = {false}
                     zoomEnabled = {false}
@@ -235,7 +241,7 @@ const DetailProductNew = () => {
             <View style={styles.priceAndButtonContainer}>
                 <View style={styles.priceContainer}>
                     <Text style={styles.priceLabel}>Price</Text>
-                    <Text style={styles.priceText}>{price}</Text>
+                    <Text style={styles.priceText}>$ {price} Per month</Text>
                 </View>
                 
                 <View style={styles.rentButtonContainer}>
@@ -263,12 +269,12 @@ const DetailProductNew = () => {
                         horizontal={false}
                         data={images}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={({item}) => (
+                        renderItem={({item, index}) => (
                             <View style={styles.modalImageContainer}>
                                 <Image
                                 style={styles.modalImage}
                                 resizeMode="cover"
-                                source={imageMapping[item]}
+                                source={{uri: images[index]}}
                             />
                             </View>
                         )}
@@ -713,19 +719,19 @@ const styles = StyleSheet.create({
         width: "100%",
 
         //borderWidth: 2,  //Debugging
-        //borderColor: "blue", //Debugging
+        //borderColor: "green", //Debugging
     },
 
         //Price container :
         priceContainer: {
             position: "relative",
             flexDirection: "column",
-            width: "auto",
+            width: "40%",
             height: "100%",
             marginLeft: "2%",
 
             //borderWidth: 2,  //Debugging
-            //borderColor: "blue", //Debugging
+            //borderColor: "red", //Debugging
         },
 
             //Price label :
@@ -748,7 +754,7 @@ const styles = StyleSheet.create({
             position: "relative",
             width: "auto",
             height: "auto",
-            marginLeft: "45%",
+            marginLeft: "7%",
             
             //borderWidth: 2, //Debugging
             //borderColor: "blue", //Debugging
@@ -757,11 +763,10 @@ const styles = StyleSheet.create({
             //Rent now button :
             rentButton: {
                 backgroundColor: Color.colorCornflowerblue,
-                width: "auto",
+                width: 200,
                 height: "100%",
                 justifyContent: "center",
                 borderRadius: Border.br_3xs,
-                paddingHorizontal: "5%",
 
                 //borderWidth: 2, //Debugging
                 //borderColor: "blue", //Debugging

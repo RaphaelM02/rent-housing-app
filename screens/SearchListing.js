@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Text, StyleSheet, Image, View, TouchableOpacity, ScrollView, TextInput, Dimensions } from "react-native";
 import { useNavigation } from '@react-navigation/native';
-import propertiesData from "../info.json";
 import { Border, FontFamily, FontSize, Color } from "./GlobalStyles";
 import imageMapping from './imageMappings';
-import * as Location from 'expo-location';
 import Constants from "expo-constants";
-import getImageLink from "../functions/Google_Drive";
 import { useLocation } from "../functions/LocationContext";
+import { useListings } from "../functions/LoadListings";
 
 const {width, height} = Dimensions.get("window");
 const googleApiKey = Constants.expoConfig.extra.googleApiKey;
 
 const SearchListing = () => {
     const { latitude, longitude, locationName } = useLocation(); 
+    const { existingListings } = useListings();
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [searchText, setSearchText] = useState("");
     const navigation = useNavigation();
 
+    console.log(existingListings);
     //Function to navigate to the menu
     const handlePress = () => { navigation.navigate('Menu'); };
 
@@ -46,25 +46,30 @@ const SearchListing = () => {
     };
     //End function to get the location between the user's current location and each property
 
-    //Function to filter properties using the search bar
+
+    //Function to filter properties using the search bar or category :
     const getFilteredProperties = () => {
-        return propertiesData.filter(property => {
+        return existingListings.filter(property => {
             const matchesCategory = selectedCategory ? property.type.toLowerCase() === selectedCategory.toLowerCase() : true;
             const matchesSearchText = property.name.toLowerCase().includes(searchText.toLowerCase().trim()) || property.location.toLowerCase().includes(searchText.toLowerCase().trim());
             return matchesCategory && matchesSearchText;
         });
     };
+    //End function to filter properties using the search bar or category
 
-    //Function to filter the properties based on the distance betweent the property and the user
+
+    //Function to filter the properties based on the distance betweent the property and the user :
     const filterPropertiesByDistance = () => {
-        return propertiesData.sort((a,b) => {
+        return existingListings.sort((a,b) => {
             const distanceA = harvesine(latitude, longitude, a.coordinates.latitude, a.coordinates.longitude);
             const distanceB = harvesine(latitude, longitude, b.coordinates.latitude, b.coordinates.longitude);
             return distanceA - distanceB;
         });
     };
+    //End function to filter the properties based on the distance betweent the property and the user
 
-    //Function to render the properties images
+
+    //Function to render the properties images :
     const renderImagesByLocation = (location) => {
         let sortedProperties = getFilteredProperties();
 
@@ -92,6 +97,7 @@ const SearchListing = () => {
                                 ownerImage: property.person.image_url,
                                 phonenumber: property.person.phonenumber,
                                 email: property.person.email,
+                                position: property.person.position,
                             });
                             
                         }}
@@ -100,7 +106,7 @@ const SearchListing = () => {
                             <Image
                                 style={styles.propertyImage}
                                 resizeMode="cover"
-                                source={imageMapping[property.photo_url]}
+                                source={{uri: property.photo_url}}
                             />
                             <View style={styles.distanceContainer}>
                                 <View style={styles.circularContainer}>
@@ -115,20 +121,23 @@ const SearchListing = () => {
                                 </View>
                             </View>
                             <Text style={styles.propertyName}>{property.name}</Text>
-                            <Text style={styles.propertyPrice}>{property.price}</Text>
+                            <Text style={styles.propertyPrice}>$ {property.price} Per month</Text>
                         </View>
                     </TouchableOpacity>
                 ))}
             </ScrollView>
         );
     };
+    //End function to render the properties images
 
-    //Function to get the best property (closest and cheapest)
+
+    //Function to get the best property (closest and cheapest) :
     const getBestProperty = (location) => {
         const filteredPropertiesByDistance = filterPropertiesByDistance();
         return filteredPropertiesByDistance.sort((a, b) => a.price - b.price)[0];
     };
     const bestProperty = getBestProperty(locationName);
+    //End function to get the best property (closest and cheapest)
 
     return (
         <ScrollView contentContainerStyle={[styles.scrollViewContainer]}>
@@ -269,7 +278,7 @@ const SearchListing = () => {
 
                         {/*Best property price*/}
                         <Text style={styles.bestHousePrice}>
-                            {bestProperty.price}
+                            $ {bestProperty.price} Per month
                         </Text>
 
                         {/*Best property bedrooms and bathrooms*/}
@@ -305,11 +314,12 @@ const SearchListing = () => {
                             ownerImage: bestProperty.person.image_url,
                             phonenumber: bestProperty.person.phonenumber,
                             email: bestProperty.person.email,
+                            position: bestProperty.person.position,
                         })}>
                             <Image
                                 style={styles.bestPropertyIcon}
                                 resizeMode="cover"
-                                source={imageMapping[bestProperty.photo_url]}
+                                source={{uri: bestProperty.photo_url}}
                             />
                         </TouchableOpacity>
                     </View>
