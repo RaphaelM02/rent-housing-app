@@ -11,13 +11,16 @@ import SearchListing from './screens/SearchListing';
 import Menu from './screens/Menu';
 import WhitePage from './screens/WhitePage';
 import DetailProductNew from './screens/DetailProductNew';
-import { User } from './screens/UserContext';
 import AddListing from './screens/AddListing';
+import About from './screens/About';
+import Contact from './screens/Contact';
+import { User } from './screens/UserContext';
 import { LocationProvider } from './functions/LocationContext';
 import { ListingsProvider } from './functions/LoadListings';
 import * as Font from 'expo-font';
 import 'react-native-get-random-values';
 import * as FileSystem from 'expo-file-system';
+import clearCache from './functions/ClearCache';
 
 const Stack = createStackNavigator();
 
@@ -33,8 +36,10 @@ const AppNavigator = () => {
     
     const [fontsLoaded, setFontsLoaded] = React.useState(false);
 
-    FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'properties.json', JSON.stringify([])); //Use this to clear the properties.json file when needed
-    FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'users.json', JSON.stringify([])); //Use this to clear the users.json file when needed
+    //clearCache();
+
+    //FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'properties.json', JSON.stringify([])); //Use this to clear the properties.json file when needed
+    //FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'users.json', JSON.stringify([])); //Use this to clear the users.json file when needed
 
     useEffect(() => {
         loadFonts().then(() => {
@@ -78,6 +83,8 @@ const AppNavigator = () => {
                             <Stack.Screen name="WhitePage" component={WhitePage} options={{ headerShown: true }} /> 
                             <Stack.Screen name="DetailProduct" component={DetailProductNew} />
                             <Stack.Screen name="AddListing" component={AddListing} />
+                            <Stack.Screen name="About" component={About} />
+                            <Stack.Screen name="Contact" component={Contact} />
                         </Stack.Navigator>
                     </NavigationContainer>
             </LocationProvider>

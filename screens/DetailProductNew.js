@@ -550,6 +550,7 @@ const styles = StyleSheet.create({
             position: "relative",
             width: 50,
             height: 50,
+            borderRadius: 9999,
             alignSelf: "center",
             marginHorizontal: "2%",
             

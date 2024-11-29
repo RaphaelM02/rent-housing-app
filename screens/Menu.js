@@ -9,6 +9,8 @@ const Menu = ({ navigation }) => {
     const handleLogoutPress = () => { navigation.navigate('LogIn'); };
     const handleHelpPress = () => { navigation.navigate('AddListing'); };
     const handleBookPress = () => { navigation.navigate('SearchListing'); };
+    const handleAboutPress = () => { navigation.navigate('About'); };
+    const handleContactPress = () => { navigation.navigate('Contact'); };
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContainer} showsVerticalScrollIndicator={false}>
@@ -70,36 +72,6 @@ const Menu = ({ navigation }) => {
                 </TouchableOpacity>
                 */}
 
-                {/*Messages Section*/}
-                {/*
-                <TouchableOpacity
-                    style={styles.menuSections}
-                    onPress={handlePress}
-                >
-                    <Image
-                        style={styles.menuIcons}
-                        resizeMode="cover"
-                        source={require("../assets/logo10.png")}
-                    />
-                    <Text style={styles.menuText}>Messages</Text>
-                </TouchableOpacity>
-                */}
-
-                {/*Settings Section*/}
-                {/*
-                <TouchableOpacity
-                    style={styles.menuSections}
-                    onPress={handlePress}
-                >
-                    <Image
-                        style={styles.menuIcons}
-                        resizeMode="cover"
-                        source={require("../assets/logo13.png")}
-                    />
-                    <Text style={styles.menuText}>Settings</Text>
-                </TouchableOpacity>
-                */}
-
                 {/*Profile Section*/}
                 {/*
                 <TouchableOpacity
@@ -126,6 +98,32 @@ const Menu = ({ navigation }) => {
                         source={imageMapping.plusIcon}
                     />
                     <Text style={styles.menuText}>List your property</Text>
+                </TouchableOpacity>
+
+                {/*About Section*/}
+                <TouchableOpacity
+                    style={styles.menuSections}
+                    onPress={handleAboutPress}
+                >
+                    <Image
+                        style={styles.menuIcons}
+                        resizeMode="cover"
+                        source={require("../assets/about-logo.png")}
+                    />
+                    <Text style={styles.menuText}>About us</Text>
+                </TouchableOpacity>
+
+                {/*Contact Section*/}
+                <TouchableOpacity
+                    style={styles.menuSections}
+                    onPress={handleContactPress}
+                >
+                    <Image
+                        style={styles.menuIcons}
+                        resizeMode="cover"
+                        source={require("../assets/logo10.png")}
+                    />
+                    <Text style={styles.menuText}>Contact Us</Text>
                 </TouchableOpacity>
 
                 {/*Logout Section*/}

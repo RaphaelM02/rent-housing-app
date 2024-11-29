@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Text, StyleSheet, Image, View, TouchableOpacity, ScrollView, TextInput, Dimensions, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import { Color , Border } from './GlobalStyles'
 import MapView, { Marker } from "react-native-maps";
@@ -24,6 +24,12 @@ const AddListing = () => {
     const {latitude , longitude, locationName} = useLocation();
     const {user, login, logout} = useUser();
     const {viewListings} = useListings();
+
+    const descriptionRef = useRef(null);
+    const priceRef = useRef(null);
+    const bathroomsRef = useRef(null);
+    const bedroomsRef = useRef(null);
+    const typeRef = useRef(null);
 
 
     //Fields and function to update them :
@@ -93,9 +99,27 @@ const AddListing = () => {
                 multiple: true,
             });
             const document = result.assets;
+
+            const propertyImagesDir = FileSystem.cacheDirectory+'property_images/';
+            const propertyImagesDirInfo = await FileSystem.getInfoAsync(propertyImagesDir);
+
+            if(!propertyImagesDirInfo.exists){
+                await FileSystem.makeDirectoryAsync(propertyImagesDir, {intermediates: true});
+            }
+            
             for (let index = 0; index < document.length; index++) {
                 const element = document[index];
-                images.push(element.uri);
+                const fileName = element.uri.split('/').pop();
+                const newImagesPath = propertyImagesDir+fileName;
+
+                await FileSystem.copyAsync({
+                    from: element.uri,
+                    to: newImagesPath,
+                });
+
+                images.push(newImagesPath);
+
+                await FileSystem.deleteAsync(element.uri, {idempotent: true});
             };
             updateField("photo_url", images[0]);
             updateField("images",images);
@@ -116,7 +140,7 @@ const AddListing = () => {
 
 
     //Function to render the map :
-    const LocationSelector = useCallback(() => {
+    const LocationSelector = (useCallback(() => {
         try {
             return (
                 <View style={styles.locationSelectorContainer}>
@@ -128,7 +152,7 @@ const AddListing = () => {
                         }}
                         placeholder="Search"
                         fetchDetails={true}
-                        onPress={(data, details = null) => {
+                        onPress={(data, details = null)  => {
                             if (data.description.startsWith("Current location")) {
                                 setMarkerPosition({latitude, longitude});
                                 setRegion({ latitude, longitude, latitudeDelta: 0, longitudeDelta: 0.04});
@@ -197,7 +221,7 @@ const AddListing = () => {
                 <Text>Error rendering the map</Text>
             )
         }
-    }, [markerPosition, region, inputHidden]);
+    }, [markerPosition, region, inputHidden]));
     //End function to render the map
 
 
@@ -294,47 +318,63 @@ const AddListing = () => {
                         value={apartment.name}
                         onChangeText={(name) => updateField("name", name)}
                         autoCapitalize="words"
+                        returnKeyType="next"
+                        onSubmitEditing={() => descriptionRef.current.focus()}
                     />
 
                     {/*Description*/}
                     <TextInput
+                        ref={descriptionRef}
                         style={styles.input}
                         placeholder="Description"
                         value={apartment.description}
                         onChangeText={(description) => updateField("description", description)}
                         autoCapitalize= "sentences"
+                        multiline={true}
+                        returnKeyType="next"
+                        onSubmitEditing={() => priceRef.current.focus()}
                     />
 
                     {/*Price*/}
                     <TextInput
+                        ref={priceRef}
                         style={styles.input}
                         placeholder="Price"
                         value={apartment.price}
                         onChangeText={(price) => updateField("price", price)}
                         keyboardType="numeric"
+                        returnKeyType="next"
+                        onSubmitEditing={() => bathroomsRef.current.focus()}
                     />
 
                     {/*Bathrooms*/}
                     <TextInput
+                        ref={bathroomsRef}
                         style={styles.input}
                         placeholder="Bathrooms"
                         value={apartment.bathroom}
                         onChangeText={(bathroom) => updateField("bathroom",bathroom)}
                         keyboardType="numeric"
+                        returnKeyType="next"
+                        onSubmitEditing={() => bedroomsRef.current.focus()}
                     />
 
                     {/*Bedrooms*/}
                     <TextInput
+                        ref={bedroomsRef}
                         style={styles.input}
                         placeholder="Bedrooms"
                         value={apartment.bedroom}
                         onChangeText={(bedroom) => updateField("bedroom",bedroom)}
                         keyboardType="numeric"
+                        returnKeyType="next"
+                        onSubmitEditing={() => typeRef.current.focus()}
                     />
 
                     {/*Type*/}
                     <View style={styles.typeSelectorContainer}>
                         <Picker
+                            ref={typeRef}
                             selectedValue={apartment.type}
                             onValueChange={(type) => updateField("type", type)}
                             style= {styles.typeSelector}

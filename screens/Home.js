@@ -1,18 +1,49 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Text, StyleSheet, Image, View, TouchableOpacity, ScrollView, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import Swiper from "react-native-swiper";
 import { FontAwesome5 } from "@expo/vector-icons";
 import imageMapping from "./imageMappings";
+import * as FileSystem from 'expo-file-system';
 
 const { width, height } = Dimensions.get("window");
 
 const Home = () => {
     const navigation = useNavigation();
+    const [imagesInCachePath, setImagesInCachePath] = useState([]);
+    const [isImagesFetched, setIsImagesFetched] = useState(false);
 
     const handleSearchListingPress = () => navigation.navigate("SearchListing");
     const handleMenuPress = () => navigation.navigate("Menu");
+
+    const cacheDir = FileSystem.cacheDirectory;
+    const imagesCacheDir = cacheDir + 'property_images/';
+
+    useEffect(() => {
+        const getImagesFromCache = async () => {
+            const imagesCacheInfo = await FileSystem.getInfoAsync(imagesCacheDir);
+
+            if (imagesCacheInfo.exists) {
+                const allImagesInCache = await FileSystem.readDirectoryAsync(imagesCacheDir);
+                const imagesInCache = allImagesInCache.filter(image => image.endsWith('.png') || image.endsWith('.jpg'));
+                const firstThreeImages = imagesInCache.slice(0,3);
+    
+                const imagePath = firstThreeImages.map(image => imagesCacheDir+image);
+
+                setImagesInCachePath(imagePath);
+                setIsImagesFetched(true);
+            };
+        };
+
+        if(!isImagesFetched) {
+            getImagesFromCache();
+        };
+    }, [isImagesFetched]);
+
+    const imagesMapped = imagesInCachePath.map(imagePath => ({uri: imagePath}));
+    console.log(imagesMapped);
+    
 
     const Welcome = () => (
         <LinearGradient
@@ -71,9 +102,19 @@ const Home = () => {
                 dot={<View style={styles.dot} />}
                 activeDot={<View style={styles.activeDot} />}
             >
+                {imagesMapped.map((image, index) => (
+                    <View style={styles.slideshowSlide} key={index}>
+                        <Image
+                            source={imagesMapped ? image : imageMapping['bathIcon']}
+                            style={styles.slideshowImage}
+                            resizeMode="cover"
+                        />
+                    </View>
+                ))}
+                {/*
                 <View style={styles.slideshowSlide}>
                     <Image
-                        source={imageMapping["../assets/images/hall.jpg"]}
+                        source={imageMapping.backIcon}
                         style={styles.slideshowImage}
                         resizeMode="cover"
                     />
@@ -81,7 +122,7 @@ const Home = () => {
 
                 <View style={styles.slideshowSlide}>
                     <Image
-                        source={imageMapping["../assets/images/bathroom-1.jpg"]}
+                        source={imageMapping.backIcon}
                         style={styles.slideshowImage}
                         resizeMode="cover"
                     />
@@ -89,11 +130,12 @@ const Home = () => {
 
                 <View style={styles.slideshowSlide}>
                     <Image
-                        source={imageMapping["../assets/images/bathroom-2.jpg"]}
+                        source={imageMapping.backIcon}
                         style={styles.slideshowImage}
                         resizeMode="cover"
                     />
                 </View>
+                */}
             </Swiper>
         </View>
     );
@@ -122,7 +164,7 @@ const Home = () => {
             </View>
         );
     };
-      
+
     return (
         <ScrollView style={styles.mainScrollViewContainer}>
             <View style={styles.homeContainer}>
