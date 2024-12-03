@@ -13,7 +13,11 @@ export default {
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.raphael.rentHousing",
+      "config": {
+        "googleApiKey": process.env.GOOGLE_PLACES_API,
+      },
     },
     "android": {
       "package": "com.raphael.renthousingapp",

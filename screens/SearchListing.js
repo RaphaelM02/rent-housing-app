@@ -6,6 +6,7 @@ import imageMapping from './imageMappings';
 import Constants from "expo-constants";
 import { useLocation } from "../functions/LocationContext";
 import { useListings } from "../functions/LoadListings";
+import * as  FileSystem from 'expo-file-system';
 
 const {width, height} = Dimensions.get("window");
 const googleApiKey = Constants.expoConfig.extra.googleApiKey;
@@ -16,6 +17,9 @@ const SearchListing = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [searchText, setSearchText] = useState("");
     const navigation = useNavigation();
+
+    //FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'properties.json', JSON.stringify([])); //Use this to clear the properties.json file when needed
+
 
     console.log(existingListings);
     //Function to navigate to the menu

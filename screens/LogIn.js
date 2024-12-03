@@ -1,12 +1,7 @@
 import * as React from "react";
-import { View, Text, TouchableOpacity, Alert, Linking, Image, ScrollView, Modal, FlatList, StyleSheet, TextInput } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { FontSize, Border, Color, FontFamily } from "./GlobalStyles";
-import usersData from "../users.json";
+import { Text, TouchableOpacity, Alert, Image, ScrollView, StyleSheet, TextInput } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import imageMapping from "./imageMappings";
-import * as SplashScreen from 'expo-splash-screen';
-import { useFonts } from "expo-font";
 import * as FileSystem from 'expo-file-system';
 import { useUser } from "./UserContext";
 

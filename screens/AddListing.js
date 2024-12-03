@@ -182,6 +182,7 @@ const AddListing = () => {
 
                     <View style={inputHidden ? {height: 0.7 * height} : styles.mapContainer}>
                         <MemoizedMapView
+                            googleMapId="321bc25d25ff09c0"
                             provider="google"
                             style={styles.mapStyle}
                             initialRegion={region}
@@ -192,7 +193,9 @@ const AddListing = () => {
                                 getLocationName(latitude, longitude);
                             }}
                         >
-                            <Marker coordinate= {markerPosition} title="You're here" />
+                            {markerPosition.latitude && markerPosition.longitude && (
+                                <Marker coordinate= {markerPosition} title="You're here" />
+                            )}
                         </MemoizedMapView>
 
                         {/*Overlay text*/}
